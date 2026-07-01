@@ -4,10 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:css": "npx @tailwindcss/cli -i ./static/src/app.css -o ./static/css/app.css --watch",
-    "build:css": "npx @tailwindcss/cli -i ./static/src/app.css -o ./static/css/app.css --minify",
+    "predev": "npm run copy:htmx",
+    "dev": "concurrently --kill-others-on-fail --names tailwind,django \"npm:dev:css\" \"npm:dev:django\"",
+    "dev:css": "tailwindcss -i ./static/src/app.css -o ./static/css/app.css --watch",
+    "dev:django": ".venv/bin/python manage.py runserver",
+    "build:css": "tailwindcss -i ./static/src/app.css -o ./static/css/app.css --minify",
     "copy:htmx": "mkdir -p static/vendor && cp node_modules/htmx.org/dist/htmx.min.js static/vendor/htmx.min.js",
-    "dev": "npm run copy:htmx && npm run dev:css",
     "build": "npm run copy:htmx && npm run build:css"
   },
   "repository": {
@@ -24,7 +26,8 @@
   "homepage": "https://github.com/MotchiWebsites/juna#readme",
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.2",
-    "tailwindcss": "^4.3.2",
-    "htmx.org": "^2.0.10"
+    "concurrently": "^10.0.3",
+    "htmx.org": "^2.0.10",
+    "tailwindcss": "^4.3.2"
   }
 }

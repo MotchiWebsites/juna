@@ -18,6 +18,17 @@ ALLOWED_HOSTS = [
     if host.strip()
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
+    if origin.strip()
+]
+
+# Preview deployments use changing subdomains under vercel.app.
+if os.getenv("VERCEL"):
+    ALLOWED_HOSTS.append(".vercel.app")
+    CSRF_TRUSTED_ORIGINS.append("https://*.vercel.app")
+
 # Public origin used for canonical and social-sharing URLs.
 # Leave it empty locally to use the current request origin.
 SITE_URL = os.getenv("SITE_URL", "").strip().rstrip("/")

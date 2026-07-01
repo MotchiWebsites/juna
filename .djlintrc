@@ -1,0 +1,10 @@
+{
+    "profile": "django",
+    "indent": 4,
+    "max_line_length": 88,
+    "max_attribute_length": 48,
+    "single_attribute_per_line": true,
+    "line_break_after_multiline_tag": true,
+    "preserve_class_newlines": true,
+    "use_gitignore": true
+}
