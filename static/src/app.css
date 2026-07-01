@@ -1,4 +1,143 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
-@source '../../templates';
-@source '../../website/templates';
+@source "../../templates";
+@source "../../website/templates";
+
+html {
+    scroll-behavior: smooth;
+}
+
+@theme {
+    /* Brand Colors */
+    --color-gold: #d49800;
+    --color-pink: #e41769;
+    --color-blue: #127b95;
+    --color-green: #256349;
+
+    /* Snaga Font */
+    --font-sans: "snaga-unicase-display", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "snaga-unicase-display", ui-sans-serif, system-ui, sans-serif;
+
+    /* Keeps opposite desktop header elements visually balanced. */
+    --spacing-site-edge: 2rem;
+}
+
+@layer components {
+    .site-nav-link,
+    .site-nav-cta {
+        font-size: 1.6rem;
+        line-height: 1;
+    }
+
+    .site-nav-link {
+        display: flex;
+        min-height: 2.75rem;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 1rem;
+        color: #525252;
+        text-align: right;
+        text-decoration: none;
+        transition:
+            color 180ms ease,
+            font-size 180ms ease,
+            transform 180ms ease;
+    }
+
+    .site-nav-cta {
+        font-weight: 400;
+        letter-spacing: normal;
+    }
+
+    .site-nav-link:hover {
+        color: #171717;
+        transform: translateX(-0.2rem);
+    }
+
+    .site-nav-link:focus-visible {
+        border-radius: 0.125rem;
+        outline: 2px solid var(--color-green);
+        outline-offset: 4px;
+    }
+
+    .site-nav-link.is-active {
+        color: #0a0a0a;
+        font-size: 1.78rem;
+        font-weight: 600;
+    }
+
+    .site-nav-icon {
+        width: 1em;
+        height: 1em;
+        flex: 0 0 1em;
+        filter: grayscale(1);
+        opacity: 0.48;
+        object-fit: contain;
+        transition:
+            filter 180ms ease,
+            opacity 180ms ease,
+            transform 180ms ease;
+    }
+
+    .site-nav-link:hover .site-nav-icon {
+        opacity: 0.72;
+        transform: rotate(12deg);
+    }
+
+    .site-nav-link.is-active .site-nav-icon {
+        filter: grayscale(0);
+        opacity: 1;
+    }
+
+    body.mobile-menu-open {
+        overflow: hidden;
+    }
+
+    .mobile-menu .site-nav-link {
+        min-height: 3.25rem;
+        font-size: clamp(1.75rem, 7vw, 2.75rem);
+    }
+
+    .mobile-menu .site-nav-link.is-active {
+        font-size: clamp(1.9rem, 7.5vw, 3rem);
+    }
+
+    .hero-emphasis {
+        display: inline-block;
+        max-width: 100%;
+        vertical-align: baseline;
+        border: 1.5px solid currentColor;
+        border-radius: 0.22em;
+        padding: 0.01em 0.17em 0.08em;
+        line-height: inherit;
+        white-space: normal;
+    }
+
+    .hero-emphasis--pink {
+        color: var(--color-pink);
+    }
+
+    .hero-emphasis--blue {
+        color: var(--color-blue);
+    }
+
+    .hero-emphasis--gold {
+        color: var(--color-gold);
+    }
+
+    .hero-emphasis--green {
+        color: var(--color-green);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+
+}

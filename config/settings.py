@@ -18,6 +18,10 @@ ALLOWED_HOSTS = [
     if host.strip()
 ]
 
+# Public origin used for canonical and social-sharing URLs.
+# Leave it empty locally to use the current request origin.
+SITE_URL = os.getenv("SITE_URL", "").strip().rstrip("/")
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -50,6 +54,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "website.context_processors.site_settings",
             ],
         },
     },

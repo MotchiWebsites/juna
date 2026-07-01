@@ -1,0 +1,96 @@
+{% load navigation_tags static %}
+<header
+    class="sticky top-0 z-50 flex h-20 items-center justify-between border-b border-neutral-900 bg-white px-5 lg:hidden"
+>
+    <a
+        href="#overview"
+        class="flex h-full items-center focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green"
+        aria-label="Juna home"
+    >
+        <img
+            src="{% static 'images/juna_logo.png' %}"
+            alt=""
+            width="890"
+            height="702"
+            class="h-20 w-auto max-w-none"
+        >
+    </a>
+    <button
+        type="button"
+        class="group inline-flex size-11 appearance-none items-center justify-center border-0 bg-transparent p-0 text-neutral-900 shadow-none transition-colors duration-200 hover:text-green focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green"
+        data-mobile-menu-toggle
+        aria-expanded="false"
+        aria-controls="mobile-navigation"
+        aria-label="Open primary navigation"
+    >
+        <span
+            class="flex w-7 flex-col gap-1.5"
+            aria-hidden="true"
+        >
+            <span
+                class="h-0.5 w-full shrink-0 origin-center transform-gpu rounded-full bg-current transition-transform duration-380 ease-in-out will-change-transform group-aria-expanded:translate-y-2 group-aria-expanded:rotate-45"
+            ></span>
+            <span
+                class="h-0.5 w-full shrink-0 rounded-full bg-current transition-opacity duration-300 ease-out group-aria-expanded:opacity-0"
+            ></span>
+            <span
+                class="h-0.5 w-full shrink-0 origin-center transform-gpu rounded-full bg-current transition-transform duration-380 ease-in-out will-change-transform group-aria-expanded:-translate-y-2 group-aria-expanded:-rotate-45"
+            ></span>
+        </span>
+    </button>
+</header>
+<a
+    href="#overview"
+    class="px-site-edge hidden h-28 items-center focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green lg:flex"
+    aria-label="Juna home"
+>
+    <img
+        src="{% static 'images/juna_logo.png' %}"
+        alt=""
+        width="890"
+        height="702"
+        class="h-28 w-auto max-w-none"
+    >
+</a>
+<div
+    id="mobile-navigation"
+    class="mobile-menu pointer-events-none fixed inset-0 z-40 invisible -translate-y-4 overflow-y-auto bg-white opacity-0 transition-[opacity,transform,visibility] duration-300 ease-out aria-[hidden=false]:pointer-events-auto aria-[hidden=false]:visible aria-[hidden=false]:translate-y-0 aria-[hidden=false]:opacity-100 lg:hidden"
+    aria-hidden="true"
+>
+    <nav
+        class="flex min-h-full items-center px-7 py-24"
+        aria-label="Primary navigation"
+    >
+        <ul class="w-full space-y-6">
+            {% primary_navigation %}
+        </ul>
+    </nav>
+</div>
+<aside
+    class="fixed inset-y-0 right-0 z-40 hidden w-80 bg-white lg:block"
+    aria-label="Site navigation"
+>
+    <div class="px-site-edge flex h-full flex-col py-12">
+        <a
+            href="#contact"
+            class="site-nav-cta group inline-flex w-full items-center justify-end gap-3 whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green"
+        >
+            <span>LET'S CONNECT</span>
+            <img
+                src="{% static 'icons/pink_star.svg' %}"
+                alt=""
+                width="24"
+                height="24"
+                class="h-6 w-6 shrink-0 transition-transform duration-300 group-hover:translate-x-1"
+            />
+        </a>
+        <nav
+            class="mt-8 flex-1 border-r border-neutral-900 pr-7 pt-10"
+            aria-label="Primary navigation"
+        >
+            <ul class="space-y-8">
+                {% primary_navigation %}
+            </ul>
+        </nav>
+    </div>
+</aside>

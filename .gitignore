@@ -21,7 +21,7 @@ media/
 
 # Node / generated frontend files
 node_modules/
-static/css/app.css
+static/css/
 static/vendor/
 
 # Test and coverage files

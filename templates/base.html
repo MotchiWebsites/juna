@@ -1,24 +1,125 @@
-{% load static %}
-<!doctype html>
-<html lang="en">
+{% load navigation_tags static %}
+{% random_favicon as favicon_path %}
+<!DOCTYPE html>
+<html lang="en" prefix="og: https://ogp.me/ns#">
     <head>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-        <title>{% block title %}Client Site{% endblock %}</title>
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1"
+        />
+        {% comment %} Search basics {% endcomment %}
+        <link rel="canonical" href="{{ canonical_url }}" />
+        <title>
+            {% block title %}Juna | Creative Team{% endblock title %}
+        </title>
         <meta
             name="description"
-            content="{% block description %}{% endblock %}"
+            content="{% block description %}Juna is a creative team for conscious brands.{% endblock description %}"
         />
-
-        <link rel="stylesheet" href="{% static 'css/app.css' %}" />
+        <meta
+            name="keywords"
+            content="{% block keywords %}creative agency, branding, visual identity, messaging strategy{% endblock keywords %}"
+        />
+        {% comment %} Social sharing: Open Graph {% endcomment %}
+        <meta
+            property="og:title"
+            content="{% block og_title %}Juna | Creative Team{% endblock og_title %}"
+        />
+        <meta
+            property="og:description"
+            content="{% block og_description %}Juna is a creative team for conscious brands.{% endblock og_description %}"
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="{{ canonical_url }}" />
+        <meta property="og:site_name" content="Juna" />
+        <meta property="og:locale" content="en_CA" />
+        <meta
+            property="og:image"
+            content="{% block og_image %}{{ site_url }}{% static 'images/social/og-default.png' %}{% endblock og_image %}"
+        />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:width" content="1512" />
+        <meta property="og:image:height" content="982" />
+        <meta
+            property="og:image:alt"
+            content="{% block og_image_alt %}Juna website preview for a creative team serving conscious brands{% endblock og_image_alt %}"
+        />
+        {% comment %} Social sharing: X / Twitter {% endcomment %}
+        <meta
+            name="twitter:card"
+            content="summary_large_image"
+        />
+        <meta
+            name="twitter:title"
+            content="{% block twitter_title %}Juna | Creative Team{% endblock twitter_title %}"
+        />
+        <meta
+            name="twitter:description"
+            content="{% block twitter_description %}Juna is a creative team for conscious brands.{% endblock twitter_description %}"
+        />
+        <meta
+            name="twitter:image"
+            content="{% block twitter_image %}{{ site_url }}{% static 'images/social/og-twitter.png' %}{% endblock twitter_image %}"
+        />
+        <meta
+            name="twitter:image:alt"
+            content="{% block twitter_image_alt %}Juna website preview for a creative team serving conscious brands{% endblock twitter_image_alt %}"
+        />
+        {% block extra_head %}
+        {% endblock extra_head %}
+        {% comment %} Font loading {% endcomment %}
+        <link
+            rel="stylesheet"
+            href="https://use.typekit.net/phi6nyg.css"
+        />
+        {% comment %} Tailwind generated styles {% endcomment %}
+        <link
+            rel="stylesheet"
+            href="{% static 'css/app.css' %}"
+        />
+        {% comment %} Favicon and other icons {% endcomment %}
+        <link
+            rel="icon"
+            href="{% static 'favicon/favicon.ico' %}"
+            sizes="48x48"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="96x96"
+            href="{% static 'favicon/favicon-96x96.png' %}"
+        />
+        <link
+            rel="icon"
+            type="image/svg+xml"
+            sizes="any"
+            href="{% static favicon_path %}"
+        />
+        <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="{% static 'favicon/apple-touch-icon.png' %}"
+        />
+        {% comment %} Site Manifest {% endcomment %}
+        <link
+            rel="manifest"
+            href="{% static 'favicon/site.webmanifest' %}"
+        />
+        {% comment %} Theme Color {% endcomment %}
+        <meta name="theme-color" content="#ffffff" />
+        {% comment %} HTMX {% endcomment %}
         <script src="{% static 'vendor/htmx.min.js' %}" defer></script>
     </head>
-    <body>
+    <body class="min-h-screen font-sans text-neutral-950">
         {% include "website/partials/navbar.html" %}
-
-        <main>{% block content %}{% endblock %}</main>
-
-        {% include "website/partials/footer.html" %}
+        <div class="lg:pr-80">
+            <main id="site-content" tabindex="-1">
+                {% block content %}
+                {% endblock content %}
+            </main>
+            {% include "website/partials/footer.html" %}
+        </div>
+        <script src="{% static 'js/navigation.js' %}" defer></script>
     </body>
 </html>

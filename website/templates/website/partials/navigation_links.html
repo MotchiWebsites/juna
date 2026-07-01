@@ -1,0 +1,22 @@
+{% load static %}
+{% for item in navigation_items %}
+    <li>
+        <a
+            href="#{{ item.section_id }}"
+            class="site-nav-link{% if item.section_id == 'overview' %} is-active{% endif %}"
+            data-primary-nav-link
+            data-section-id="{{ item.section_id }}"
+            {% if item.section_id == "overview" %}aria-current="location"{% endif %}
+        >
+            <span>{{ item.label }}</span>
+            <img
+                class="site-nav-icon"
+                src="{% static item.icon %}"
+                width="32"
+                height="32"
+                alt=""
+                aria-hidden="true"
+            />
+        </a>
+    </li>
+{% endfor %}

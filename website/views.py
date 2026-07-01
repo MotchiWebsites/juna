@@ -1,3 +1,21 @@
 from django.shortcuts import render
 
-# Create your views here (responses to web requests).
+
+def home(request):
+    return render(request, "website/home.html")
+
+
+def work(request):
+    return render(request, "website/work.html")
+
+
+def about(request):
+    return render(request, "website/about.html")
+
+
+def services(request):
+    return render(request, "website/services.html")
+
+
+def contact(request):
+    return render(request, "website/contact.html")
