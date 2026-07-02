@@ -3,7 +3,7 @@ import re
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
-from website.navigation import PRIMARY_NAVIGATION
+from website.content.navigation import PRIMARY_NAVIGATION
 from website.templatetags.navigation_tags import FAVICON_PATHS
 
 
@@ -81,11 +81,38 @@ class HomepageTests(TestCase):
     def test_homepage_sections_use_progressive_scroll_reveals(self):
         response = self.client.get(reverse("website:home"))
 
-        self.assertContains(response, "data-reveal", count=5)
+        self.assertContains(response, "data-reveal", count=12)
         self.assertContains(
             response,
             'src="/static/js/scroll-reveal.js"',
         )
+
+    def test_about_section_renders_team_profiles_and_static_assets(self):
+        response = self.client.get(reverse("website:home"))
+
+        self.assertContains(response, 'aria-labelledby="about-title"')
+        self.assertContains(response, "Jun Nguyen")
+        self.assertContains(response, "Alicia Symons")
+        self.assertContains(response, 'src="/static/images/about/duong.jpg"')
+        self.assertContains(response, 'src="/static/images/about/alicia.jpg"')
+        self.assertContains(response, "data-team-member", count=2)
+
+    def test_works_section_renders_all_work_items(self):
+        response = self.client.get(reverse("website:home"))
+
+        self.assertContains(response, "data-work-item", count=5)
+        for image_name in (
+            "email-phone.jpg",
+            "signage.jpg",
+            "lai_project_can.jpg",
+            "logo_lai_project.gif",
+            "postcard_mockup.jpg",
+        ):
+            with self.subTest(image=image_name):
+                self.assertContains(
+                    response,
+                    f'src="/static/images/works/{image_name}"',
+                )
 
     def test_all_images_include_intrinsic_dimensions(self):
         response = self.client.get(reverse("website:home"))
@@ -142,11 +169,11 @@ class HomepageTests(TestCase):
         )
         self.assertContains(
             response,
-            'content="https://juna.example/static/images/social/og-default.png"',
+            'content="https://juna.example/static/images/social/open-graph/default.png"',
         )
         self.assertContains(
             response,
-            'content="https://juna.example/static/images/social/og-twitter.png"',
+            'content="https://juna.example/static/images/social/x/home.png"',
         )
         self.assertContains(response, 'property="og:image:alt"')
         self.assertContains(response, 'name="twitter:card"')

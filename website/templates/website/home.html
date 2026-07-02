@@ -7,9 +7,15 @@
 {% block twitter_title %}Juna | Creative Team{% endblock twitter_title %}
 {% block twitter_description %}Juna is a creative team for conscious brands.{% endblock twitter_description %}
 {% block content %}
-    {% include "website/partials/sections/overview.html" %}
-    {% include "website/partials/sections/works.html" %}
-    {% include "website/partials/sections/about.html" %}
-    {% include "website/partials/sections/services.html" %}
-    {% include "website/partials/sections/contact.html" %}
+    {# Adjust this responsive gap scale to control spacing between all homepage sections. #}
+    <div
+        class="flex flex-col gap-16 sm:gap-20 lg:gap-24 xl:gap-32"
+        data-home-sections
+    >
+        {% include "website/partials/sections/overview.html" %}
+        {% include "website/partials/sections/works.html" %}
+        {% include "website/partials/sections/about.html" %}
+        {% include "website/partials/sections/services.html" %}
+        {% include "website/partials/sections/contact.html" %}
+    </div>
 {% endblock content %}

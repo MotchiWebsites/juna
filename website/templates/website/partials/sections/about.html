@@ -1,12 +1,23 @@
 <section
     id="about"
-    class="flex min-h-screen scroll-mt-20 items-center px-6 py-20 sm:px-10 lg:scroll-mt-0 lg:px-site-edge"
+    class="flex min-h-screen scroll-mt-20 items-center px-6 sm:px-10 lg:scroll-mt-0 lg:px-site-edge xl:px-12"
     tabindex="-1"
+    aria-labelledby="about-title"
 >
-    <h2
-        class="font-display max-w-4xl text-5xl leading-none sm:text-7xl"
-        data-reveal
-    >
-        About us
-    </h2>
+    <div class="mx-auto w-full max-w-6xl">
+        <h2
+            id="about-title"
+            class="text-3xl font-semibold leading-tight text-balance sm:text-4xl lg:text-[2.5rem]"
+            data-reveal
+        >
+            <span class="text-emphasis text-emphasis--blue">Who</span>
+            you will be working with
+        </h2>
+
+        <div class="mt-12 grid gap-20 sm:mt-14 lg:mt-12 lg:gap-14 xl:gap-16">
+            {% for member in team_members %}
+                {% include "website/partials/components/about/team_member.html" with member=member only %}
+            {% endfor %}
+        </div>
+    </div>
 </section>
