@@ -1,0 +1,29 @@
+{% load static %}
+
+<figure
+    class="group overflow-hidden rounded-3xl bg-neutral-100
+        {% if layout == "landscape-compact" %}
+            aspect-4/3 sm:aspect-3/2 lg:col-span-5 lg:aspect-auto
+        {% elif layout == "landscape-wide" %}
+            aspect-16/10 [--reveal-delay:100ms] sm:aspect-3/2 lg:col-span-7 lg:aspect-auto
+        {% elif layout == "portrait-feature" %}
+            aspect-4/5 sm:row-span-2 sm:aspect-auto lg:col-span-7
+        {% elif layout == "square" %}
+            aspect-square [--reveal-delay:100ms] lg:col-span-5 lg:aspect-auto
+        {% elif layout == "landscape-card" %}
+            aspect-5/4 [--reveal-delay:200ms] lg:col-span-5 lg:aspect-auto
+        {% endif %}"
+    data-reveal
+    data-work-item
+>
+    <img
+        src="{% static work.image_path %}"
+        alt="{{ work.image_alt }}"
+        width="{{ work.image_width }}"
+        height="{{ work.image_height }}"
+        loading="lazy"
+        decoding="async"
+        class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+    />
+    <figcaption class="sr-only">{{ work.name }}</figcaption>
+</figure>

@@ -119,6 +119,7 @@ secrets.
 │   │       └── sections/   # Homepage section components
 │   ├── templatetags/       # Custom Django template tags
 │   ├── navigation.py       # Shared navigation data
+│   ├── team.py             # Immutable team profile content
 │   ├── tests.py            # Application tests
 │   ├── urls.py             # Application routes
 │   └── views.py            # Request handlers

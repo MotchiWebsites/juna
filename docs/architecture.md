@@ -52,6 +52,7 @@ Feature behavior should not accumulate here. Put site-specific behavior in the
 - the homepage URL and view;
 - future models, forms, and admin registration;
 - shared navigation data;
+- immutable team profile content;
 - template context and custom template tags;
 - homepage components and tests.
 

@@ -125,7 +125,7 @@ html {
         font-size: clamp(1.9rem, 7.5vw, 3rem);
     }
 
-    .hero-emphasis {
+    .text-emphasis {
         display: inline-block;
         max-width: 100%;
         vertical-align: baseline;
@@ -137,19 +137,19 @@ html {
         margin: 0.5rem 0.2rem;
     }
 
-    .hero-emphasis--pink {
+    .text-emphasis--pink {
         color: var(--color-pink);
     }
 
-    .hero-emphasis--blue {
+    .text-emphasis--blue {
         color: var(--color-blue);
     }
 
-    .hero-emphasis--gold {
+    .text-emphasis--gold {
         color: var(--color-gold);
     }
 
-    .hero-emphasis--green {
+    .text-emphasis--green {
         color: var(--color-green);
     }
 
