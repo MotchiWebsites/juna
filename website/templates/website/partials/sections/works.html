@@ -2,24 +2,24 @@
 
 <section
     id="works"
-    class="scroll-mt-20 px-6 py-20 sm:px-10 lg:scroll-mt-0 lg:px-16"
+    class="scroll-mt-20 px-6 py-20 sm:px-10 lg:scroll-mt-0 lg:pl-site-edge lg:pr-12"
     tabindex="-1"
 >
     <div class="mx-auto w-full max-w-375">
         <h2
-            class="font-display max-w-4xl text-5xl leading-none sm:text-7xl"
+            class="lg:sr-only font-display max-w-4xl text-5xl leading-none sm:text-7xl"
             data-reveal
         >
-            Selected work
+            Our Work
         </h2>
 
-        {# A compact stack on mobile becomes an editorial mosaic on desktop. #}
+        {# A mobile stack becomes a two-column bento on tablet and an editorial mosaic on desktop. #}
         <div
-            class="mt-12 grid gap-5 sm:grid-cols-2 lg:mt-16 lg:h-[min(72vw,61.25rem)] lg:grid-cols-12 lg:grid-rows-3"
+            class="mt-12 grid gap-5 sm:grid-cols-2 lg:mt-16 lg:h-[min(67vw,59rem)] lg:grid-cols-12 lg:grid-rows-[1.3fr_2fr_1fr]"
         >
             {# Mobile product experience #}
             <figure
-                class="group aspect-4/3 overflow-hidden rounded-3xl bg-neutral-100 lg:col-span-5 lg:aspect-auto"
+                class="group aspect-4/3 overflow-hidden rounded-3xl bg-neutral-100 sm:aspect-3/2 lg:col-span-5 lg:aspect-auto"
             >
                 <img
                     src="{% static 'images/email-phone.jpg' %}"
@@ -34,7 +34,7 @@
 
             {# Outdoor campaign signage #}
             <figure
-                class="group aspect-16/10 overflow-hidden rounded-3xl bg-neutral-100 lg:col-span-7 lg:aspect-auto"
+                class="group aspect-16/10 overflow-hidden rounded-3xl bg-neutral-100 sm:aspect-3/2 lg:col-span-7 lg:aspect-auto"
             >
                 <img
                     src="{% static 'images/signage.jpg' %}"
@@ -49,7 +49,7 @@
 
             {# Lai packaging and identity #}
             <figure
-                class="group aspect-4/5 overflow-hidden rounded-3xl bg-neutral-100 lg:col-span-7 lg:row-span-2 lg:aspect-auto"
+                class="group aspect-4/5 overflow-hidden rounded-3xl bg-neutral-100 sm:row-span-2 sm:aspect-auto lg:col-span-7"
             >
                 <img
                     src="{% static 'images/lai_project_can.jpg' %}"
