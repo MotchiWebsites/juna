@@ -1,0 +1,27 @@
+<a
+    href="#works"
+    class="group absolute bottom-20 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 whitespace-nowrap text-green transition duration-300 hover:text-neutral-950 focus-visible:rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green aria-hidden:pointer-events-none aria-hidden:translate-y-2 aria-hidden:opacity-0 lg:hidden"
+    data-scroll-prompt
+    aria-hidden="false"
+>
+    <span class="font-regular text-xs tracking-widest uppercase">
+        Scroll to see more
+    </span>
+    <span
+        class="flex size-8 items-center justify-center rounded-full border border-green/40 transition-transform duration-200 motion-safe:animate-bounce group-hover:translate-y-1"
+        aria-hidden="true"
+    >
+        {% comment %} Down arrow SVG {% endcomment %}
+        <svg
+            viewBox="0 0 24 24"
+            class="size-4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <path d="m6 9 6 6 6-6"></path>
+        </svg>
+    </span>
+</a>

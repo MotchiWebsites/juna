@@ -5,13 +5,13 @@
         {% if layout == "landscape-compact" %}
             aspect-4/3 sm:aspect-3/2 lg:col-span-5 lg:aspect-auto
         {% elif layout == "landscape-wide" %}
-            aspect-16/10 [--reveal-delay:100ms] sm:aspect-3/2 lg:col-span-7 lg:aspect-auto
+            aspect-16/10 delay-100 sm:aspect-3/2 lg:col-span-7 lg:aspect-auto
         {% elif layout == "portrait-feature" %}
             aspect-4/5 sm:row-span-2 sm:aspect-auto lg:col-span-7
         {% elif layout == "square" %}
-            aspect-square [--reveal-delay:100ms] lg:col-span-5 lg:aspect-auto
+            aspect-square delay-100 lg:col-span-5 lg:aspect-auto
         {% elif layout == "landscape-card" %}
-            aspect-5/4 [--reveal-delay:200ms] lg:col-span-5 lg:aspect-auto
+            aspect-5/4 delay-200 lg:col-span-5 lg:aspect-auto
         {% endif %}"
     data-reveal
     data-work-item

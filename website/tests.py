@@ -82,10 +82,22 @@ class HomepageTests(TestCase):
 
         self.assertContains(response, 'aria-current="location"', count=2)
 
+    def test_overview_has_mobile_scroll_prompt(self):
+        response = self.client.get(reverse("website:home"))
+
+        self.assertContains(response, "data-scroll-prompt", count=1)
+        self.assertContains(response, 'href="#works"')
+        self.assertContains(response, "Scroll to see more")
+        self.assertContains(response, "lg:hidden")
+        self.assertContains(
+            response,
+            'src="/static/js/scroll-prompt.js"',
+        )
+
     def test_homepage_sections_use_progressive_scroll_reveals(self):
         response = self.client.get(reverse("website:home"))
 
-        self.assertContains(response, "data-reveal", count=18)
+        self.assertContains(response, "data-reveal", count=19)
         self.assertContains(response, "data-shared-heading", count=5)
         self.assertContains(
             response,
@@ -146,6 +158,38 @@ class HomepageTests(TestCase):
         ):
             with self.subTest(service=service_name):
                 self.assertContains(response, service_name)
+
+    def test_contact_section_renders_accessible_unbound_form(self):
+        response = self.client.get(reverse("website:home"))
+
+        self.assertContains(response, 'aria-labelledby="contact-title"')
+        self.assertContains(response, "Tell us about your project")
+        self.assertContains(response, "data-contact-form", count=1)
+        self.assertContains(response, 'type="email"', count=1)
+        self.assertContains(response, 'autocomplete="name"', count=1)
+        self.assertContains(response, 'autocomplete="organization"', count=1)
+        self.assertContains(response, 'autocomplete="email"', count=1)
+        self.assertContains(response, 'name="csrfmiddlewaretoken"', count=1)
+        self.assertContains(response, "<textarea", count=1)
+        self.assertContains(response, "Start chatting")
+
+    def test_contact_form_preserves_values_and_renders_validation_errors(self):
+        response = self.client.post(
+            reverse("website:home"),
+            {
+                "name": "A prospective client",
+                "organization": "Example Studio",
+                "email": "not-an-email",
+                "description": "",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'value="A prospective client"')
+        self.assertContains(response, 'value="Example Studio"')
+        self.assertContains(response, 'aria-invalid="true"', count=2)
+        self.assertContains(response, "Enter a valid email address.")
+        self.assertContains(response, "This field is required.")
 
     def test_all_images_include_intrinsic_dimensions(self):
         response = self.client.get(reverse("website:home"))

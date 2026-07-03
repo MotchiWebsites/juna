@@ -54,7 +54,7 @@ HOMEPAGE_HEADINGS = {
     "services": SectionHeading(
         heading_id="services-title",
         level=2,
-        variant="section",
+        variant="natural-wrap",
         segments=(
             HeadingSegment("How we can help "),
             HeadingSegment("raise your impact", "pink"),
@@ -63,7 +63,7 @@ HOMEPAGE_HEADINGS = {
     "contact": SectionHeading(
         heading_id="contact-title",
         level=2,
-        variant="section",
-        segments=(HeadingSegment("Let's connect"),),
+        variant="contact",
+        segments=(HeadingSegment("Tell us about your project", "green"),),
     ),
 }

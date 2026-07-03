@@ -1,7 +1,15 @@
 {% if heading.level == 1 %}
     <h1
         id="{{ heading.heading_id }}"
-        class="font-display {% if heading.variant == "hero" %}max-w-4xl text-4xl font-semibold leading-normal md:text-5xl{% else %}text-3xl font-semibold leading-tight text-balance sm:text-4xl lg:text-[2.5rem]{% endif %}"
+        class="font-display font-semibold
+               {% if heading.variant == "hero" %}
+               max-w-4xl text-xl sm:text-2xl leading-loose md:text-3xl lg:text-4xl xl:text-5xl
+               {% else %}
+               text-3xl leading-normal sm:text-4xl lg:text-4xl
+               {% if heading.variant != "natural-wrap" %}
+               text-balance
+               {% endif %}
+               {% endif %}"
         data-reveal
         data-shared-heading
     >
@@ -10,7 +18,15 @@
 {% else %}
     <h2
         id="{{ heading.heading_id }}"
-        class="font-display {% if heading.variant == "hero" %}max-w-4xl text-4xl font-semibold leading-normal md:text-5xl{% else %}text-3xl font-semibold leading-tight text-balance sm:text-4xl lg:text-[2.5rem]{% endif %}"
+        class="font-display font-semibold
+               {% if heading.variant == "hero" %}
+               max-w-4xl text-xl sm:text-2xl leading-loose md:text-3xl lg:text-4xl xl:text-5xl
+               {% else %}
+               text-3xl leading-normal sm:text-4xl lg:text-4xl
+               {% if heading.variant != "natural-wrap" %}
+               text-balance
+               {% endif %}
+               {% endif %}"
         data-reveal
         data-shared-heading
     >
