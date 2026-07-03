@@ -1,0 +1,36 @@
+{% load static %}
+<article
+    class="{% if reveal_delay == 1 or reveal_delay == 3 or reveal_delay == 5 %}[--reveal-delay:100ms]{% endif %}"
+    data-reveal
+    data-service-item
+>
+    <h3
+        class="flex items-center gap-3 text-4xl font-semibold leading-none sm:text-[2.5rem] lg:text-[2.75rem]
+               {% if service.color == "blue" %}
+               text-blue
+               {% elif service.color == "green" %}
+               text-green
+               {% elif service.color == "pink" %}
+               text-pink
+               {% elif service.color == "gold" %}
+               text-gold
+               {% endif %}"
+    >
+        <img
+            src="{% static service.icon_path %}"
+            alt=""
+            width="{{ service.icon_width }}"
+            height="{{ service.icon_height }}"
+            class="size-9 shrink-0 object-contain sm:size-10"
+            aria-hidden="true"
+        />
+        <span>{{ service.name }}</span>
+    </h3>
+    {% if service.description %}
+        <p
+            class="font-regular mt-4 max-w-md text-base leading-normal text-gray-600 lg:text-lg"
+        >
+            {{ service.description }}
+        </p>
+    {% endif %}
+</article>

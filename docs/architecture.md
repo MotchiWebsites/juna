@@ -21,9 +21,11 @@ Browser request
     → config/urls.py
     → website/urls.py
     → website/views.py
+        → website/content/
     → website/templates/website/home.html
         → templates/base.html
         → website/templates/website/partials/sections/
+            → website/templates/website/partials/components/
     → HTML response
 ```
 
@@ -51,8 +53,7 @@ Feature behavior should not accumulate here. Put site-specific behavior in the
 
 - the homepage URL and view;
 - future models, forms, and admin registration;
-- shared navigation data;
-- immutable team profile content;
+- immutable heading, navigation, service, team, and work content;
 - template context and custom template tags;
 - homepage components and tests.
 
@@ -85,8 +86,13 @@ styles, navigation, footer, and script loading.
 
 `website/templates/website/home.html` extends the base template and owns page
 metadata plus section composition. Each homepage section is a focused component
-under `website/templates/website/partials/sections/`. Shared site chrome remains
-under `website/templates/website/partials/`.
+under `website/templates/website/partials/sections/`. Reusable UI is grouped by
+feature under `website/templates/website/partials/components/`; navigation
+chrome lives under `components/navigation/`.
+
+The wrapper in `home.html` is the single source of responsive spacing between
+homepage sections. Individual sections own only their internal layout and
+horizontal spacing.
 
 Application-specific templates retain the `website/` namespace to prevent
 collisions if more Django apps are added.
@@ -94,12 +100,33 @@ collisions if more Django apps are added.
 Custom template tags live in `website/templatetags/`. Keep them presentation
 focused; database access and business rules do not belong in template tags.
 
+## Homepage content
+
+Immutable authored content lives under `website/content/`:
+
+- `headings.py` defines semantic heading levels, shared size variants, and
+  ordered plain or emphasized text segments;
+- `navigation.py` defines the section navigation;
+- `services.py` and `team.py` define reusable card content;
+- `works.py` separates portfolio content from the rotating bento layout.
+
+`website.views.home` passes these collections to the homepage. Keep Tailwind
+class names in templates rather than content modules so Tailwind can discover
+and compile them.
+
+The shared heading component renders one page-entry `h1` and section `h2`
+elements. Visual sizing is controlled by its variant rather than by changing
+semantic heading levels. Existing section headings should remain aligned with
+their section's `aria-labelledby` value.
+
 ## Navigation
 
-`website/navigation.py` is the source of truth for primary navigation items.
+`website/content/navigation.py` is the source of truth for primary navigation
+items.
 `website.templatetags.navigation_tags.primary_navigation` exposes that data to
-the navigation partial. The homepage sections and their IDs must stay aligned
-with each navigation item's `section_id`.
+the `components/navigation/navigation_links.html` partial. The homepage
+sections and their IDs must stay aligned with each navigation item's
+`section_id`.
 
 When changing navigation:
 
@@ -116,6 +143,15 @@ Source-controlled assets live under `static/`:
 - `static/js/` contains browser enhancements.
 - `static/images/`, `static/icons/`, and `static/favicon/` contain authored
   media.
+
+Authored images are grouped by purpose: team portraits under `images/about/`,
+portfolio media under `images/works/`, and platform-specific share previews
+under `images/social/open-graph/` and `images/social/x/`.
+
+Templates should use Tailwind utilities directly. Small shared utilities belong
+in `static/src/app.css`; currently `text-emphasis` provides the outlined
+emphasis shell and `font-regular` provides Arial/system body copy at weight
+400.
 
 The following directories are generated and ignored:
 
@@ -187,6 +223,9 @@ The current Django tests cover:
 - successful homepage rendering and combined metadata;
 - required metadata;
 - navigation targets and active state;
+- heading hierarchy and shared heading rendering;
+- team, work, and service collection rendering;
+- intrinsic image dimensions and viewport reveal hooks;
 - favicon behavior;
 - absolute canonical and social image URLs.
 

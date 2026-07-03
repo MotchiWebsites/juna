@@ -1,0 +1,9 @@
+{% for segment in heading.segments %}
+    {% if segment.emphasis_color %}
+        <span
+            class="text-emphasis {% if segment.emphasis_color == "pink" %}text-pink{% elif segment.emphasis_color == "blue" %}text-blue{% elif segment.emphasis_color == "gold" %}text-gold{% elif segment.emphasis_color == "green" %}text-green{% endif %}"
+        >{{ segment.text }}</span>
+    {% else %}
+        {{ segment.text }}
+    {% endif %}
+{% endfor %}

@@ -2,11 +2,15 @@
     id="services"
     class="flex min-h-screen scroll-mt-20 items-center px-6 sm:px-10 lg:scroll-mt-0 lg:px-site-edge"
     tabindex="-1"
+    aria-labelledby="services-title"
 >
-    <h2
-        class="font-display max-w-4xl text-5xl leading-none sm:text-7xl"
-        data-reveal
-    >
-        Services
-    </h2>
+    <div class="w-full max-w-4xl">
+        {% include "website/partials/components/shared/heading.html" with heading=headings.services only %}
+
+        <div class="mt-12 grid gap-x-12 gap-y-14 md:grid-cols-2 lg:mt-14 lg:gap-y-16">
+            {% for service in services %}
+                {% include "website/partials/components/services/service_item.html" with service=service reveal_delay=forloop.counter0 only %}
+            {% endfor %}
+        </div>
+    </div>
 </section>

@@ -16,11 +16,14 @@ to continue.
 
 - Project configuration, middleware, and root routing: `config/`
 - Site routes and request handling: `website/urls.py` and `website/views.py`
+- Authored homepage content: focused modules inside `website/content/`
 - Reusable site behavior: a focused module inside `website/`
 - Shared page shell: `templates/base.html`
 - Homepage composition: `website/templates/website/home.html`
 - Homepage section components:
   `website/templates/website/partials/sections/`
+- Reusable template components:
+  `website/templates/website/partials/components/`
 - Tailwind source and custom styles: `static/src/app.css`
 - Small browser interactions: `static/js/`
 - Tests: `website/tests.py`, or a `website/tests/` package as the suite grows
@@ -35,6 +38,10 @@ to continue.
 - Use Django's ORM for database access and avoid database work in templates.
 - Use named, namespaced URLs and `reverse()` or `{% url %}` for internal links.
 - Prefer reusable template partials and template tags over duplicated markup.
+- Keep authored content in `website/content/` and presentation classes in
+  templates. Tailwind cannot reliably discover class names assembled in Python.
+- Preserve the shared heading hierarchy: one entry `h1`, followed by section
+  `h2` elements and component-level `h3` elements.
 - Keep settings environment-driven and fail clearly when required secrets are
   missing.
 - Make schema changes through migrations. Review generated migrations before
@@ -48,12 +55,21 @@ to continue.
 
 - Treat `static/src/app.css` as the CSS source of truth.
 - Do not commit `static/css/` or `static/vendor/`; the build recreates them.
+- Prefer Tailwind utilities for component styling. Add a shared custom utility
+  only when it replaces a repeated semantic pattern, such as `text-emphasis`
+  or `font-regular`.
+- Adjust spacing between homepage sections on the flex wrapper in `home.html`;
+  do not duplicate outer vertical spacing across section templates.
 - Keep JavaScript progressive: core content and navigation should remain
   available without it.
 - Preserve semantic HTML, keyboard behavior, visible focus states, meaningful
   alternative text, and reduced-motion preferences.
 - Optimize images before adding them, use clear durable filenames, and include
   the source `width` and `height` on every image element.
+- Group authored images under the appropriate `static/images/about/`,
+  `static/images/works/`, or `static/images/social/` folder.
+- Apply `data-reveal` to the element that should animate, and use Tailwind
+  custom-property utilities for stagger delays instead of inline styles.
 
 ## Tests and checks
 

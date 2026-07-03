@@ -59,16 +59,20 @@ class HomepageTests(TestCase):
                 )
                 self.assertEqual(len(section_matches), 1)
 
-        for icon in {item.icon for item in PRIMARY_NAVIGATION}:
-            expected_count = (
-                sum(item.icon == icon for item in PRIMARY_NAVIGATION) * 2
-            )
-            with self.subTest(icon=icon):
-                self.assertContains(
-                    response,
-                    f'src="/static/{icon}"',
-                    count=expected_count,
-                )
+        navigation_links = re.findall(
+            r'<a\b(?=[^>]*data-primary-nav-link)[\s\S]*?</a>',
+            response.content.decode(),
+        )
+        self.assertEqual(len(navigation_links), len(PRIMARY_NAVIGATION) * 2)
+        for item in PRIMARY_NAVIGATION:
+            matching_links = [
+                link
+                for link in navigation_links
+                if f'data-section-id="{item.section_id}"' in link
+                and f'src="/static/{item.icon}"' in link
+            ]
+            with self.subTest(section=item.section_id):
+                self.assertEqual(len(matching_links), 2)
 
         self.assertNotContains(response, 'hx-target="#site-content"')
         self.assertNotContains(response, 'hx-push-url="true"')
@@ -81,11 +85,24 @@ class HomepageTests(TestCase):
     def test_homepage_sections_use_progressive_scroll_reveals(self):
         response = self.client.get(reverse("website:home"))
 
-        self.assertContains(response, "data-reveal", count=12)
+        self.assertContains(response, "data-reveal", count=18)
+        self.assertContains(response, "data-shared-heading", count=5)
         self.assertContains(
             response,
             'src="/static/js/scroll-reveal.js"',
         )
+
+    def test_homepage_uses_one_h1_and_h2_section_headings(self):
+        response = self.client.get(reverse("website:home"))
+        html = response.content.decode()
+
+        self.assertEqual(len(re.findall(r"<h1\b", html)), 1)
+        self.assertEqual(len(re.findall(r"<h2\b", html)), 4)
+        for section_id in ("works", "about", "services", "contact"):
+            self.assertRegex(
+                html,
+                rf'<h2\b[^>]*id="{section_id}-title"',
+            )
 
     def test_about_section_renders_team_profiles_and_static_assets(self):
         response = self.client.get(reverse("website:home"))
@@ -113,6 +130,22 @@ class HomepageTests(TestCase):
                     response,
                     f'src="/static/images/works/{image_name}"',
                 )
+
+    def test_services_section_renders_all_services(self):
+        response = self.client.get(reverse("website:home"))
+
+        self.assertContains(response, 'aria-labelledby="services-title"')
+        self.assertContains(response, "data-service-item", count=6)
+        for service_name in (
+            "Website",
+            "Branding",
+            "Advertising",
+            "Social Media",
+            "Print",
+            "Email",
+        ):
+            with self.subTest(service=service_name):
+                self.assertContains(response, service_name)
 
     def test_all_images_include_intrinsic_dimensions(self):
         response = self.client.get(reverse("website:home"))

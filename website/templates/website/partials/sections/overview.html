@@ -2,18 +2,7 @@
     id="overview"
     class="flex min-h-screen scroll-mt-20 items-center px-6 sm:px-10 lg:scroll-mt-0 lg:px-site-edge"
     tabindex="-1"
+    aria-labelledby="overview-title"
 >
-    <h1
-        class="font-display font-semibold max-w-4xl text-4xl leading-normal md:text-5xl"
-        data-reveal
-    >
-        Juna is a
-        <span class="text-emphasis text-emphasis--pink">creative team</span>
-        for
-        <span class="text-emphasis text-emphasis--blue">conscious brands</span>,
-        crafting visual identity and messaging strategy that
-        <span class="text-emphasis text-emphasis--gold">moves your audience</span>
-        to
-        <span class="text-emphasis text-emphasis--green">make a difference.</span>
-    </h1>
+    {% include "website/partials/components/shared/heading.html" with heading=headings.overview only %}
 </section>
