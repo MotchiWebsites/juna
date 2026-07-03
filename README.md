@@ -11,7 +11,7 @@ assets, and it is configured for deployment on Vercel.
 - Tailwind CSS 4
 - HTMX 2
 - Vanilla JavaScript with Intersection Observer scroll reveals
-- SQLite for local development
+- Neon PostgreSQL, with SQLite fallback when `DATABASE_URL` is absent
 - Vercel for hosting
 
 ## Requirements
@@ -94,6 +94,7 @@ Copy `.env.example` to `.env` for local development.
 | `DJANGO_ALLOWED_HOSTS` | Production | Comma-separated hostnames accepted by Django |
 | `DJANGO_CSRF_TRUSTED_ORIGINS` | Production | Comma-separated trusted origins, including scheme |
 | `DJANGO_TIME_ZONE` | No | Application time zone; defaults to `America/Toronto` |
+| `DATABASE_URL` | Production | Neon PostgreSQL connection string; omit it for SQLite |
 | `SITE_URL` | Production | Public origin used in canonical and social metadata |
 
 Never commit `.env`, credentials, production database files, or generated

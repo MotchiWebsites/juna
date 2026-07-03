@@ -183,9 +183,12 @@ scroll-triggered reveals stay independent of the request lifecycle.
 
 ## Data and migrations
 
-Local development uses SQLite at `db.sqlite3`, which is ignored by Git. Django's
-session, authentication, and admin applications still require migrations even
-while the site has no custom models.
+The application uses Neon PostgreSQL whenever `DATABASE_URL` is present and
+falls back to SQLite at `db.sqlite3` when it is absent. The local `.neon` file
+stores the non-secret Neon organization and project context; connection
+credentials remain in the ignored `.env` file. Django's session,
+authentication, and admin applications still require migrations even while the
+site has no custom models.
 
 For every model change:
 
