@@ -2,11 +2,7 @@
     id="contact"
     class="flex min-h-screen scroll-mt-20 items-center px-6 sm:px-10 lg:scroll-mt-0 lg:px-site-edge"
     tabindex="-1"
+    aria-labelledby="contact-title"
 >
-    <h2
-        class="font-display max-w-4xl text-5xl leading-none sm:text-7xl"
-        data-reveal
-    >
-        Let's connect
-    </h2>
+    {% include "website/partials/components/shared/heading.html" with heading=headings.contact only %}
 </section>

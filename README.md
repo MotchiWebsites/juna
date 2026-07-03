@@ -108,18 +108,21 @@ secrets.
 ├── static/
 │   ├── src/app.css         # Tailwind source and project styles
 │   ├── js/                 # Browser JavaScript
-│   ├── images/             # Site imagery
+│   ├── images/
+│   │   ├── about/          # Team portraits
+│   │   ├── works/          # Portfolio imagery
+│   │   └── social/         # Open Graph and X previews
 │   ├── icons/              # Decorative and navigation icons
 │   ├── css/                # Generated CSS; do not edit directly
 │   └── vendor/             # Generated third-party browser assets
 ├── templates/base.html     # Shared document shell
 ├── website/                # Main Django application
+│   ├── content/            # Immutable homepage content and layout data
 │   ├── templates/website/  # Homepage and reusable template partials
 │   │   └── partials/
-│   │       └── sections/   # Homepage section components
+│   │       ├── components/ # Reusable about, navigation, service, and work UI
+│   │       └── sections/   # Homepage section composition
 │   ├── templatetags/       # Custom Django template tags
-│   ├── navigation.py       # Shared navigation data
-│   ├── team.py             # Immutable team profile content
 │   ├── tests.py            # Application tests
 │   ├── urls.py             # Application routes
 │   └── views.py            # Request handlers
@@ -139,8 +142,16 @@ boundaries, static assets, templates, and deployment details.
   modules rather than templates or settings.
 - Name every URL and reverse it by name instead of hard-coding internal paths.
 - Keep `home.html` focused on metadata and composition. Build homepage
-  sections as focused components in `partials/sections/`.
+  sections in `partials/sections/`, reusable markup in `partials/components/`,
+  and authored homepage content in `website/content/`.
+- Control the responsive gap between homepage sections on the wrapper in
+  `home.html`; keep section-internal spacing inside each section component.
+- Define homepage heading copy and emphasis segments in
+  `website/content/headings.py`. The shared heading component owns semantic
+  levels and responsive typography.
 - Edit `static/src/app.css`; never hand-edit generated `static/css/app.css`.
+- Prefer Tailwind utilities in templates. Shared authored utilities such as
+  `text-emphasis` and `font-regular` live in `static/src/app.css`.
 - Give every image meaningful alternative text or an intentional empty `alt`,
   plus its source `width` and `height` to prevent layout shift.
 - Add `data-reveal` to content that should enter once as it reaches the

@@ -5,14 +5,7 @@
     aria-labelledby="about-title"
 >
     <div class="mx-auto w-full max-w-6xl">
-        <h2
-            id="about-title"
-            class="text-3xl font-semibold leading-tight text-balance sm:text-4xl lg:text-[2.5rem]"
-            data-reveal
-        >
-            <span class="text-emphasis text-emphasis--blue">Who</span>
-            you will be working with
-        </h2>
+        {% include "website/partials/components/shared/heading.html" with heading=headings.about only %}
 
         <div class="mt-12 grid gap-20 sm:mt-14 lg:mt-12 lg:gap-14 xl:gap-16">
             {% for member in team_members %}

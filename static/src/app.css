@@ -22,6 +22,11 @@ html {
     --spacing-site-edge: 2rem;
 }
 
+@utility font-regular {
+    font-family: Arial, ui-sans-serif, system-ui, sans-serif;
+    font-weight: 400;
+}
+
 @layer components {
     .site-header {
         border-bottom: 1px solid transparent;
@@ -135,22 +140,6 @@ html {
         line-height: inherit;
         white-space: normal;
         margin: 0.5rem 0.2rem;
-    }
-
-    .text-emphasis--pink {
-        color: var(--color-pink);
-    }
-
-    .text-emphasis--blue {
-        color: var(--color-blue);
-    }
-
-    .text-emphasis--gold {
-        color: var(--color-gold);
-    }
-
-    .text-emphasis--green {
-        color: var(--color-green);
     }
 
     /*

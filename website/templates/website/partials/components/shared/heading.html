@@ -1,0 +1,19 @@
+{% if heading.level == 1 %}
+    <h1
+        id="{{ heading.heading_id }}"
+        class="font-display {% if heading.variant == "hero" %}max-w-4xl text-4xl font-semibold leading-normal md:text-5xl{% else %}text-3xl font-semibold leading-tight text-balance sm:text-4xl lg:text-[2.5rem]{% endif %}"
+        data-reveal
+        data-shared-heading
+    >
+        {% include "website/partials/components/shared/heading_segments.html" with heading=heading only %}
+    </h1>
+{% else %}
+    <h2
+        id="{{ heading.heading_id }}"
+        class="font-display {% if heading.variant == "hero" %}max-w-4xl text-4xl font-semibold leading-normal md:text-5xl{% else %}text-3xl font-semibold leading-tight text-balance sm:text-4xl lg:text-[2.5rem]{% endif %}"
+        data-reveal
+        data-shared-heading
+    >
+        {% include "website/partials/components/shared/heading_segments.html" with heading=heading only %}
+    </h2>
+{% endif %}
