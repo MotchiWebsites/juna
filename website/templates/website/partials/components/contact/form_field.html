@@ -1,11 +1,8 @@
 <div>
-    <label
-        for="{{ field.id_for_label }}"
-        class="sr-only"
-    >
-        {{ field.label }}{% if field.field.required %}<span aria-hidden="true"> *</span>{% endif %}
+    <label for="{{ field.id_for_label }}" class="sr-only">
+        {{ field.label }}
+        {% if field.field.required %}<span aria-hidden="true"> *</span>{% endif %}
     </label>
-
     {% if multiline %}
         <textarea
             name="{{ field.html_name }}"
@@ -31,7 +28,6 @@
             {% if field.errors %}aria-invalid="true" aria-describedby="{{ field.auto_id }}-errors"{% endif %}
         />
     {% endif %}
-
     {% if field.errors %}
         <ul
             id="{{ field.auto_id }}-errors"
