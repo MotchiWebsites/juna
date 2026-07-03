@@ -1,0 +1,4 @@
+{% include "website/partials/components/contact/form.html" with contact_form=contact_form csrf_token=csrf_token only %}
+<div hx-swap-oob="beforeend:#toast-region">
+    {% include "website/partials/components/feedback/toasts.html" with messages=messages only %}
+</div>
