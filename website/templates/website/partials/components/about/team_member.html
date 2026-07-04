@@ -1,12 +1,12 @@
 {% load static %}
 
 <article
-    class="grid justify-items-center gap-7 md:gap-10 {% if member.is_reversed %}w-full md:grid-cols-[minmax(0,1fr)_minmax(12rem,17rem)] lg:max-w-5xl{% else %}md:grid-cols-[minmax(12rem,17rem)_minmax(0,1fr)]{% endif %}"
+    class="grid justify-items-center gap-7 md:grid-cols-2 md:gap-10 {% if member.is_reversed %}w-full lg:max-w-5xl{% endif %}"
     data-reveal
     data-team-member
 >
     <div
-        class="aspect-square w-full max-w-64 overflow-hidden rounded-full border-[5px] bg-neutral-100 md:max-w-68 {% if member.is_reversed %}border-pink md:col-start-2 md:row-start-1{% else %}border-gold{% endif %}"
+        class="aspect-square w-full max-w-64 overflow-hidden rounded-full border-4 bg-neutral-100 md:max-w-68 {% if member.is_reversed %}border-pink md:col-start-2 md:row-start-1{% else %}border-gold{% endif %}"
     >
         <img
             src="{% static member.image_path %}"
@@ -15,7 +15,7 @@
             height="{{ member.image_height }}"
             loading="lazy"
             decoding="async"
-            class="h-full w-full object-cover {% if not member.is_reversed %}scale-125 object-[50%_47%]{% endif %}"
+            class="h-full w-full object-cover {% if not member.is_reversed %}scale-125 object-center{% endif %}"
         />
     </div>
 
@@ -35,11 +35,11 @@
             />
             <div>
                 <h3
-                    class="text-4xl font-semibold leading-none sm:text-5xl lg:text-[3rem] {% if member.is_reversed %}text-pink{% else %}text-gold{% endif %}"
+                    class="text-4xl font-semibold leading-none sm:text-5xl lg:text-5xl {% if member.is_reversed %}text-pink{% else %}text-gold{% endif %}"
                 >
                     {{ member.name }}
                 </h3>
-                <p class="mt-1 text-2xl font-semibold leading-none lg:text-[1.75rem]">
+                <p class="mt-1 text-2xl font-semibold leading-none lg:text-3xl">
                     {{ member.role }}
                 </p>
             </div>

@@ -20,13 +20,11 @@ class HomepageTests(TestCase):
             html=True,
         )
         self.assertContains(response, 'name="description"')
-        self.assertContains(response, 'name="keywords"')
-        self.assertContains(response, "Juna portfolio")
-        self.assertContains(response, "independent creative studio")
-        self.assertContains(response, "brand strategy")
-        self.assertContains(response, "design project inquiry")
+        self.assertNotContains(response, 'name="keywords"')
         self.assertContains(response, 'property="og:title"')
         self.assertContains(response, 'property="og:description"')
+        self.assertContains(response, 'type="application/ld+json"')
+        self.assertContains(response, '"@type": "Organization"')
         self.assertContains(
             response,
             '<main id="site-content" tabindex="-1">',
@@ -76,16 +74,30 @@ class HomepageTests(TestCase):
 
         self.assertNotContains(response, 'hx-target="#site-content"')
         self.assertNotContains(response, 'hx-push-url="true"')
+        self.assertContains(response, "scroll-mt-20", count=5)
+        self.assertNotContains(response, "lg:scroll-mt-0")
 
     def test_overview_is_the_initial_active_section(self):
         response = self.client.get(reverse("website:home"))
 
         self.assertContains(response, 'aria-current="location"', count=2)
 
+    def test_overview_has_mobile_scroll_prompt(self):
+        response = self.client.get(reverse("website:home"))
+
+        self.assertContains(response, "data-scroll-prompt", count=1)
+        self.assertContains(response, 'href="#works"')
+        self.assertContains(response, "Scroll to see more")
+        self.assertContains(response, "lg:hidden")
+        self.assertContains(
+            response,
+            'src="/static/js/scroll-prompt.js"',
+        )
+
     def test_homepage_sections_use_progressive_scroll_reveals(self):
         response = self.client.get(reverse("website:home"))
 
-        self.assertContains(response, "data-reveal", count=18)
+        self.assertContains(response, "data-reveal", count=19)
         self.assertContains(response, "data-shared-heading", count=5)
         self.assertContains(
             response,
@@ -210,3 +222,30 @@ class HomepageTests(TestCase):
         )
         self.assertContains(response, 'property="og:image:alt"')
         self.assertContains(response, 'name="twitter:card"')
+
+    @override_settings(SITE_URL="https://juna.example")
+    def test_crawler_files_use_public_urls_and_hide_private_routes(self):
+        robots_response = self.client.get(reverse("website:robots_txt"))
+        sitemap_response = self.client.get(reverse("website:sitemap_xml"))
+
+        self.assertEqual(robots_response.status_code, 200)
+        self.assertEqual(
+            robots_response["Content-Type"],
+            "text/plain",
+        )
+        self.assertContains(
+            robots_response,
+            "Sitemap: https://juna.example/sitemap.xml",
+        )
+        self.assertContains(robots_response, "Disallow: /admin-portal/")
+        self.assertContains(robots_response, "Disallow: /staff/")
+
+        self.assertEqual(sitemap_response.status_code, 200)
+        self.assertEqual(
+            sitemap_response["Content-Type"],
+            "application/xml",
+        )
+        self.assertContains(
+            sitemap_response,
+            "<loc>https://juna.example/</loc>",
+        )

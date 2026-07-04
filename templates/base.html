@@ -17,10 +17,6 @@
             name="description"
             content="{% block description %}Juna is a creative team for conscious brands.{% endblock description %}"
         />
-        <meta
-            name="keywords"
-            content="{% block keywords %}creative agency, branding, visual identity, messaging strategy{% endblock keywords %}"
-        />
         {% comment %} Social sharing: Open Graph {% endcomment %}
         <meta
             property="og:title"
@@ -113,6 +109,14 @@
     </head>
     <body class="min-h-screen font-sans text-neutral-950">
         {% include "website/partials/components/navigation/navbar.html" %}
+        <div
+            id="toast-region"
+            class="pointer-events-none fixed top-20 right-4 left-4 z-50 ml-auto max-w-sm space-y-3"
+            aria-live="polite"
+            aria-atomic="false"
+        >
+            {% include "website/partials/components/feedback/toasts.html" with messages=messages only %}
+        </div>
         <div class="lg:pr-80">
             <main id="site-content" tabindex="-1">
                 {% block content %}
@@ -122,5 +126,7 @@
         {% include "website/partials/components/navigation/footer.html" %}
         <script src="{% static 'js/navigation.js' %}" defer></script>
         <script src="{% static 'js/scroll-reveal.js' %}" defer></script>
+        <script src="{% static 'js/scroll-prompt.js' %}" defer></script>
+        <script src="{% static 'js/toasts.js' %}" defer></script>
     </body>
 </html>

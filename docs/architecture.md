@@ -19,8 +19,8 @@ behavior requires them, not in anticipation of possible complexity.
 ```text
 Browser request
     → config/urls.py
-    → website/urls.py
-    → website/views.py
+    → website/urls.py or website/staff_urls.py
+    → website/views.py or website/staff_views.py
         → website/content/
     → website/templates/website/home.html
         → templates/base.html
@@ -32,6 +32,11 @@ Browser request
 `website.context_processors.site_settings` adds the public site origin and
 canonical URL to every template. The base template uses those values for
 canonical, Open Graph, and social metadata.
+
+Search discovery is served from `/robots.txt` and `/sitemap.xml`. The homepage
+also publishes Organization structured data, while staff and admin surfaces
+are explicitly excluded from indexing. The web manifest supports browser
+installation and is separate from search indexing.
 
 ## Django project and application boundaries
 
@@ -49,10 +54,11 @@ Feature behavior should not accumulate here. Put site-specific behavior in the
 
 ### `website/`
 
-`website` is the public site application. It owns:
+`website` is the site application. It owns:
 
-- the homepage URL and view;
-- future models, forms, and admin registration;
+- the homepage and contact-submission workflows;
+- contact models, forms, and admin registration;
+- the permission-protected staff workspace;
 - immutable heading, navigation, service, team, and work content;
 - template context and custom template tags;
 - homepage components and tests.
@@ -64,10 +70,11 @@ they own.
 
 ## URL design
 
-The project URL configuration mounts `website.urls` at the root and exposes the
-Django admin at `/admin-portal/`. The public website has one named route,
-`website:home`; its content is addressed through section fragments such as
-`/#about`.
+The project URL configuration mounts `website.urls` at the root, the custom
+contact-request workspace at `/admin-portal/contact-requests/`, and Django
+admin at `/admin-portal/`. `/staff/` is a memorable, authenticated redirect to
+the workspace. The public homepage content is addressed through section
+fragments such as `/#about`.
 
 Links from outside the homepage should combine its URL name with a section
 fragment:
@@ -183,9 +190,13 @@ scroll-triggered reveals stay independent of the request lifecycle.
 
 ## Data and migrations
 
-Local development uses SQLite at `db.sqlite3`, which is ignored by Git. Django's
-session, authentication, and admin applications still require migrations even
-while the site has no custom models.
+The application uses Neon PostgreSQL whenever `DATABASE_URL` is present and
+falls back to SQLite at `db.sqlite3` when it is absent. The local `.neon` file
+stores the non-secret Neon organization and project context; connection
+credentials remain in the ignored `.env` file. `ContactSubmission` persists
+public inquiries in `contact_submissions`. Its identity and message fields are
+immutable in Django admin; authorized staff update only workflow status in the
+custom workspace.
 
 For every model change:
 
@@ -208,6 +219,9 @@ Security-sensitive defaults are deliberate:
 - `DJANGO_SECRET_KEY` has no source-code fallback.
 - Debug mode defaults to off.
 - Allowed hosts and trusted CSRF origins are environment-controlled.
+- Production redirects to HTTPS and uses secure session and CSRF cookies.
+- Production starts with a cautious one-hour HSTS duration.
+- Staff views use Django admin authentication plus model-level permissions.
 - `.env`, local databases, collected static files, and generated frontend
   outputs are ignored by Git.
 
@@ -217,7 +231,7 @@ README.
 
 ## Testing
 
-The current Django tests cover:
+The Django tests under `website/tests/` cover:
 
 - the single public route and removed legacy paths;
 - successful homepage rendering and combined metadata;
@@ -228,12 +242,15 @@ The current Django tests cover:
 - intrinsic image dimensions and viewport reveal hooks;
 - favicon behavior;
 - absolute canonical and social image URLs.
+- contact validation and persistence;
+- custom staff authentication and permission boundaries;
+- responsive request summaries, filtering, and dedicated details;
+- HTMX and non-HTMX status-update paths.
 
 Keep tests behavior-oriented. Test public contracts rather than implementation
-details, and add a regression test with every bug fix.
-
-If the suite becomes difficult to navigate, replace `website/tests.py` with a
-`website/tests/` package organized by feature.
+details, and add a regression test with every bug fix. `manage.py test`
+automatically selects `config.test_settings`, which uses in-memory SQLite and
+cannot mutate Neon.
 
 ## Deployment
 

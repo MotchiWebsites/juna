@@ -1,0 +1,41 @@
+<div data-status-control>
+    {% if can_change %}
+        <form
+            method="post"
+            action="{% url 'website_staff:update_contact_request_status' submission.pk %}"
+            hx-post="{% url 'website_staff:update_contact_request_status' submission.pk %}"
+            hx-trigger="change"
+            hx-target="closest [data-status-control]"
+            hx-swap="outerHTML"
+            hx-disabled-elt="find select"
+        >
+            {% csrf_token %}
+            <input
+                type="hidden"
+                name="presentation"
+                value="inline"
+            />
+            <input
+                type="hidden"
+                name="control_id"
+                value="{{ control_id }}"
+            />
+            <label class="sr-only" for="status-{{ control_id }}-{{ submission.pk }}">
+                Update status for {{ submission.name }}
+            </label>
+            <select
+                id="status-{{ control_id }}-{{ submission.pk }}"
+                name="status"
+                class="font-regular h-9 min-w-32 rounded-lg border border-neutral-300 bg-white px-2 text-xs font-semibold outline-none transition focus:border-green focus:ring-2 focus:ring-green/20 disabled:cursor-wait disabled:opacity-60"
+            >
+                {% for value, label in status_choices %}
+                    <option value="{{ value }}" {% if submission.status == value %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+    {% else %}
+        {% include "website/staff/contact_requests/_status_badge.html" with submission=submission only %}
+    {% endif %}
+</div>

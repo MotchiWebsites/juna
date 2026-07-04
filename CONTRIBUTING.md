@@ -26,7 +26,7 @@ to continue.
   `website/templates/website/partials/components/`
 - Tailwind source and custom styles: `static/src/app.css`
 - Small browser interactions: `static/js/`
-- Tests: `website/tests.py`, or a `website/tests/` package as the suite grows
+- Tests: focused modules in `website/tests/`
 - Setup and usage guidance: `README.md`
 - Architecture guidance: `docs/architecture.md`
 
@@ -80,6 +80,9 @@ python manage.py check
 python manage.py test
 npm run build
 ```
+
+The test command automatically uses isolated in-memory SQLite settings, even
+when local development is connected to Neon.
 
 Add regression tests when fixing a bug. For a new page, test its named URL,
 status, template output, and important metadata or accessibility contract.

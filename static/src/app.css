@@ -16,7 +16,8 @@ html {
 
     /* Snaga Font */
     --font-sans: "snaga-unicase-display", ui-sans-serif, system-ui, sans-serif;
-    --font-display: "snaga-unicase-display", ui-sans-serif, system-ui, sans-serif;
+    --font-display:
+        "snaga-unicase-display", ui-sans-serif, system-ui, sans-serif;
 
     /* Keeps opposite desktop header elements visually balanced. */
     --spacing-site-edge: 2rem;
@@ -131,15 +132,14 @@ html {
     }
 
     .text-emphasis {
-        display: inline-block;
-        max-width: 100%;
-        vertical-align: baseline;
+        display: inline;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
         border: 1.5px solid currentColor;
         border-radius: 0.22em;
-        padding: 0.01em 0.17em 0.08em;
+        padding: 0 0.17em 0.04em;
         line-height: inherit;
         white-space: normal;
-        margin: 0.5rem 0.2rem;
     }
 
     /*
@@ -161,6 +161,10 @@ html {
         transform: translate3d(0, 0, 0);
         will-change: auto;
     }
+}
+
+a, button:hover {
+    cursor: pointer;
 }
 
 @media (prefers-reduced-motion: reduce) {

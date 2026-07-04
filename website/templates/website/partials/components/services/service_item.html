@@ -1,11 +1,11 @@
 {% load static %}
 <article
-    class="{% if reveal_delay == 1 or reveal_delay == 3 or reveal_delay == 5 %}[--reveal-delay:100ms]{% endif %}"
+    class="{% if reveal_delay == 1 or reveal_delay == 3 or reveal_delay == 5 %}delay-100{% endif %}"
     data-reveal
     data-service-item
 >
     <h3
-        class="flex items-center gap-3 text-4xl font-semibold leading-none sm:text-[2.5rem] lg:text-[2.75rem]
+        class="flex items-center gap-3 text-4xl font-semibold leading-none sm:text-4xl lg:text-5xl
                {% if service.color == "blue" %}
                text-blue
                {% elif service.color == "green" %}

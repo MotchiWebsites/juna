@@ -1,0 +1,208 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1"
+        />
+        <meta name="robots" content="noindex,nofollow" />
+        <title>{% if form.errors %}Error | {% endif %}Juna staff login</title>
+        <link
+            rel="stylesheet"
+            href="https://use.typekit.net/phi6nyg.css"
+        />
+        <link
+            rel="stylesheet"
+            href="{% static 'css/app.css' %}"
+        />
+        <link
+            rel="icon"
+            href="{% static 'favicon/favicon.ico' %}"
+            sizes="48x48"
+        />
+        {{ form.media }}
+    </head>
+    <body class="min-h-screen bg-neutral-50 font-sans text-neutral-950">
+        <main class="grid min-h-screen lg:grid-cols-2">
+            <section class="relative hidden overflow-hidden bg-green p-12 text-white lg:flex lg:flex-col lg:justify-between">
+                <div>
+                    <a
+                        href="{% url 'website:home' %}"
+                        class="inline-flex rounded-lg bg-white p-2 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+                        aria-label="Return to Juna"
+                    >
+                        <img
+                            src="{% static 'images/juna_logo.png' %}"
+                            alt="Juna"
+                            width="890"
+                            height="702"
+                            class="h-14 w-auto"
+                        />
+                    </a>
+                    <p class="font-regular mt-10 max-w-md text-sm leading-relaxed text-white/75">
+                        A private workspace for reviewing project inquiries and keeping client conversations moving.
+                    </p>
+                </div>
+                <div class="relative z-10">
+                    <p class="text-5xl font-semibold leading-none">
+                        Good work starts with a thoughtful hello.
+                    </p>
+                </div>
+                <img
+                    src="{% static 'icons/pink_star.svg' %}"
+                    alt=""
+                    width="120"
+                    height="120"
+                    class="absolute right-12 bottom-48 size-24 rotate-12 opacity-90"
+                    aria-hidden="true"
+                />
+                <img
+                    src="{% static 'icons/yellow_circle.svg' %}"
+                    alt=""
+                    width="119"
+                    height="118"
+                    class="absolute -right-8 -bottom-8 size-40 opacity-90"
+                    aria-hidden="true"
+                />
+            </section>
+
+            <section class="flex items-center justify-center px-5 py-10 sm:px-10">
+                <div class="w-full max-w-md">
+                    <a
+                        href="{% url 'website:home' %}"
+                        class="mb-10 inline-flex rounded-lg bg-white p-2 shadow-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green lg:hidden"
+                        aria-label="Return to Juna"
+                    >
+                        <img
+                            src="{% static 'images/juna_logo.png' %}"
+                            alt="Juna"
+                            width="890"
+                            height="702"
+                            class="h-12 w-auto"
+                        />
+                    </a>
+
+                    <p class="font-regular text-sm font-semibold tracking-widest text-green uppercase">
+                        Staff only
+                    </p>
+                    <h1 class="mt-3 text-4xl font-semibold leading-none sm:text-5xl">
+                        Welcome back
+                    </h1>
+                    <p class="font-regular mt-4 text-sm leading-normal text-neutral-600">
+                        Sign in with your Juna staff account to continue.
+                    </p>
+
+                    {% if form.non_field_errors %}
+                        <div
+                            class="font-regular mt-6 rounded-xl border border-pink/30 bg-pink/5 p-4 text-sm text-pink"
+                            role="alert"
+                        >
+                            {% for error in form.non_field_errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% elif form.errors %}
+                        <div
+                            class="font-regular mt-6 rounded-xl border border-pink/30 bg-pink/5 p-4 text-sm text-pink"
+                            role="alert"
+                        >
+                            Please correct the highlighted field.
+                        </div>
+                    {% endif %}
+
+                    {% if user.is_authenticated %}
+                        <div
+                            class="font-regular mt-6 rounded-xl border border-gold/30 bg-gold/5 p-4 text-sm leading-normal text-neutral-700"
+                            role="alert"
+                        >
+                            You are signed in as {{ username }}, but this account does not have access. Sign in with a staff account instead.
+                        </div>
+                    {% endif %}
+
+                    <form
+                        action="{{ app_path }}"
+                        method="post"
+                        class="mt-8 space-y-5"
+                    >
+                        {% csrf_token %}
+                        <div>
+                            <label
+                                for="{{ form.username.id_for_label }}"
+                                class="font-regular block text-sm font-semibold text-neutral-700"
+                            >
+                                {{ form.username.label }}
+                            </label>
+                            <input
+                                type="text"
+                                name="{{ form.username.html_name }}"
+                                id="{{ form.username.id_for_label }}"
+                                value="{{ form.username.value|default:'' }}"
+                                maxlength="{{ form.username.field.max_length }}"
+                                autocomplete="username"
+                                autocapitalize="none"
+                                autofocus
+                                required
+                                class="font-regular mt-2 h-12 w-full rounded-xl border bg-white px-4 text-base outline-none transition focus:border-green focus:ring-2 focus:ring-green/20 {% if form.username.errors %}border-pink{% else %}border-neutral-300{% endif %}"
+                                {% if form.username.errors %}aria-invalid="true" aria-describedby="{{ form.username.auto_id }}-errors"{% endif %}
+                            />
+                            {% if form.username.errors %}
+                                <div
+                                    id="{{ form.username.auto_id }}-errors"
+                                    class="font-regular mt-2 text-sm text-pink"
+                                    role="alert"
+                                >
+                                    {{ form.username.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            <label
+                                for="{{ form.password.id_for_label }}"
+                                class="font-regular block text-sm font-semibold text-neutral-700"
+                            >
+                                {{ form.password.label }}
+                            </label>
+                            <input
+                                type="password"
+                                name="{{ form.password.html_name }}"
+                                id="{{ form.password.id_for_label }}"
+                                autocomplete="current-password"
+                                required
+                                class="font-regular mt-2 h-12 w-full rounded-xl border bg-white px-4 text-base outline-none transition focus:border-green focus:ring-2 focus:ring-green/20 {% if form.password.errors %}border-pink{% else %}border-neutral-300{% endif %}"
+                                {% if form.password.errors %}aria-invalid="true" aria-describedby="{{ form.password.auto_id }}-errors"{% endif %}
+                            />
+                            {% if form.password.errors %}
+                                <div
+                                    id="{{ form.password.auto_id }}-errors"
+                                    class="font-regular mt-2 text-sm text-pink"
+                                    role="alert"
+                                >
+                                    {{ form.password.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <input
+                            type="hidden"
+                            name="next"
+                            value="{{ next }}"
+                        />
+                        <button
+                            type="submit"
+                            class="font-regular inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-pink px-5 py-3 text-base font-semibold text-white transition hover:-translate-y-0.5 hover:bg-green focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-pink active:translate-y-0"
+                        >
+                            Sign in
+                        </button>
+                    </form>
+
+                    <p class="font-regular mt-8 text-center text-xs leading-normal text-neutral-400">
+                        Access is restricted to authorized Juna staff.
+                    </p>
+                </div>
+            </section>
+        </main>
+    </body>
+</html>

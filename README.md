@@ -11,7 +11,7 @@ assets, and it is configured for deployment on Vercel.
 - Tailwind CSS 4
 - HTMX 2
 - Vanilla JavaScript with Intersection Observer scroll reveals
-- SQLite for local development
+- Neon PostgreSQL, with SQLite fallback when `DATABASE_URL` is absent
 - Vercel for hosting
 
 ## Requirements
@@ -80,7 +80,9 @@ assets, and it is configured for deployment on Vercel.
 | `python manage.py check` | Run Django's system checks |
 | `python manage.py makemigrations` | Create migrations after model changes |
 | `python manage.py migrate` | Apply database migrations |
+| `python manage.py createsuperuser` | Create a staff administrator |
 | `python manage.py collectstatic` | Gather static files for production |
+| `python manage.py check --deploy` | Audit production security settings |
 
 ## Environment variables
 
@@ -94,6 +96,10 @@ Copy `.env.example` to `.env` for local development.
 | `DJANGO_ALLOWED_HOSTS` | Production | Comma-separated hostnames accepted by Django |
 | `DJANGO_CSRF_TRUSTED_ORIGINS` | Production | Comma-separated trusted origins, including scheme |
 | `DJANGO_TIME_ZONE` | No | Application time zone; defaults to `America/Toronto` |
+| `DJANGO_SECURE_HSTS_SECONDS` | No | Production HSTS lifetime; defaults to a cautious 3600 seconds |
+| `DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS` | No | Extend HSTS to subdomains only after verifying all use HTTPS |
+| `DJANGO_SECURE_HSTS_PRELOAD` | No | Opt into browser preload signaling only after meeting preload requirements |
+| `DATABASE_URL` | Production | Neon PostgreSQL connection string; omit it for SQLite |
 | `SITE_URL` | Production | Public origin used in canonical and social metadata |
 
 Never commit `.env`, credentials, production database files, or generated
@@ -118,12 +124,16 @@ secrets.
 ├── templates/base.html     # Shared document shell
 ├── website/                # Main Django application
 │   ├── content/            # Immutable homepage content and layout data
+│   ├── forms/              # Contact and staff workflow forms
+│   ├── models/             # Persistent application models
+│   ├── tests/              # Tests organized by feature
 │   ├── templates/website/  # Homepage and reusable template partials
 │   │   └── partials/
 │   │       ├── components/ # Reusable about, navigation, service, and work UI
 │   │       └── sections/   # Homepage section composition
 │   ├── templatetags/       # Custom Django template tags
-│   ├── tests.py            # Application tests
+│   ├── staff_urls.py       # Staff contact-request routes
+│   ├── staff_views.py      # Permission-protected staff workflows
 │   ├── urls.py             # Application routes
 │   └── views.py            # Request handlers
 ├── manage.py
@@ -172,7 +182,16 @@ The complete workflow is in [Contributing](CONTRIBUTING.md).
 | Route | URL name | Purpose |
 | --- | --- | --- |
 | `/` | `website:home` | Single-page website and section navigation |
-| `/admin-portal/` | `admin:index` | Django administration |
+| `/robots.txt` | `website:robots_txt` | Crawler rules and sitemap discovery |
+| `/sitemap.xml` | `website:sitemap_xml` | Public canonical URL sitemap |
+| `/staff/` | `website:staff_portal` | Memorable staff shortcut; login required |
+| `/admin-portal/contact-requests/` | `website_staff:contact_request_list` | Responsive contact-request workspace |
+| `/admin-portal/` | `admin:index` | Django administration and custom staff login |
+
+Create an administrator with `python manage.py createsuperuser`, then use
+`/staff/`. Authorized staff also see a **Staff portal** link in the public
+navigation while signed in. Contact-request access is controlled by Django's
+`view_contactsubmission` and `change_contactsubmission` permissions.
 
 ## Deployment
 
@@ -186,9 +205,23 @@ python manage.py collectstatic --noinput
 
 Configure all production environment variables in the hosting environment.
 Vercel preview hostnames and CSRF origins are handled by `config/settings.py`.
-Before a production release, run the Django checks and tests, verify that
-`SITE_URL` uses the final HTTPS origin, and confirm that static assets are
-served from `STATIC_ROOT`.
+Before a production release, run:
+
+```bash
+python manage.py check --deploy
+python manage.py test
+npm run build
+python manage.py collectstatic --noinput
+python manage.py migrate --check
+```
+
+Verify that `DJANGO_DEBUG=False`, `SITE_URL` uses the final HTTPS origin, hosts
+and CSRF origins are exact, and Neon backups are enabled. Production enables
+secure cookies, HTTPS redirects, and a one-hour HSTS policy by default. Increase
+HSTS gradually only after HTTPS is confirmed across every production host.
+Configure platform rate limits for `/contact/submit/` and
+`/admin-portal/login/`; Django authentication protects credentials and
+permissions but does not provide brute-force throttling by itself.
 
 ## Documentation
 
