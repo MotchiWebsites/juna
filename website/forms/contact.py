@@ -41,3 +41,11 @@ class ContactForm(forms.ModelForm):
                 }
             ),
         }
+
+
+class ContactSubmissionStatusForm(forms.ModelForm):
+    """Allow staff to update only a submission's workflow status."""
+
+    class Meta:
+        model = ContactSubmission
+        fields = ("status",)

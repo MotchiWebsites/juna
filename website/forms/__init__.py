@@ -1,3 +1,3 @@
-from .contact import ContactForm
+from .contact import ContactForm, ContactSubmissionStatusForm
 
-__all__ = ["ContactForm"]
+__all__ = ["ContactForm", "ContactSubmissionStatusForm"]

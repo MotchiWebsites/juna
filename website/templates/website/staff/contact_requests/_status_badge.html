@@ -1,0 +1,6 @@
+<span
+    class="font-regular inline-flex whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold
+           {% if submission.status == 'new' %}bg-blue/10 text-blue{% elif submission.status == 'in_progress' %}bg-gold/10 text-gold{% elif submission.status == 'resolved' %}bg-green/10 text-green{% else %}bg-neutral-200 text-neutral-600{% endif %}"
+>
+    {{ submission.get_status_display }}
+</span>

@@ -1,0 +1,19 @@
+{% extends "website/staff/base.html" %}
+
+{% block title %}{{ submission.name }} | Contact requests{% endblock title %}
+
+{% block content %}
+    <a
+        href="{% url 'website_staff:contact_request_list' %}"
+        class="font-regular inline-flex items-center gap-2 text-sm text-neutral-500 transition-colors hover:text-green focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green"
+    >
+        <span aria-hidden="true">←</span>
+        Back to contact requests
+    </a>
+    <div
+        id="request-detail-panel"
+        class="mt-6 max-w-3xl rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-7"
+    >
+        {% include "website/staff/contact_requests/_detail.html" %}
+    </div>
+{% endblock content %}

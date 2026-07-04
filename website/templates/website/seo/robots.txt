@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin-portal/
+Disallow: /staff/
+Disallow: /contact/submit/
+
+Sitemap: {{ site_url }}{% url "website:sitemap_xml" %}

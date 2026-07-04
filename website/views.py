@@ -7,6 +7,7 @@ from .content.headings import HOMEPAGE_HEADINGS
 from .content.services import SERVICES
 from .content.team import TEAM_MEMBERS
 from .content.works import WORK_GRID
+from .context_processors import get_site_url
 from .forms import ContactForm
 
 
@@ -63,4 +64,24 @@ def home(request):
         request,
         "website/home.html",
         _home_context(),
+    )
+
+
+@require_GET
+def robots_txt(request):
+    return render(
+        request,
+        "website/seo/robots.txt",
+        {"site_url": get_site_url(request)},
+        content_type="text/plain",
+    )
+
+
+@require_GET
+def sitemap_xml(request):
+    return render(
+        request,
+        "website/seo/sitemap.xml",
+        {"site_url": get_site_url(request)},
+        content_type="application/xml",
     )

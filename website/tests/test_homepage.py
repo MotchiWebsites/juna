@@ -20,13 +20,11 @@ class HomepageTests(TestCase):
             html=True,
         )
         self.assertContains(response, 'name="description"')
-        self.assertContains(response, 'name="keywords"')
-        self.assertContains(response, "Juna portfolio")
-        self.assertContains(response, "independent creative studio")
-        self.assertContains(response, "brand strategy")
-        self.assertContains(response, "design project inquiry")
+        self.assertNotContains(response, 'name="keywords"')
         self.assertContains(response, 'property="og:title"')
         self.assertContains(response, 'property="og:description"')
+        self.assertContains(response, 'type="application/ld+json"')
+        self.assertContains(response, '"@type": "Organization"')
         self.assertContains(
             response,
             '<main id="site-content" tabindex="-1">',
@@ -224,3 +222,30 @@ class HomepageTests(TestCase):
         )
         self.assertContains(response, 'property="og:image:alt"')
         self.assertContains(response, 'name="twitter:card"')
+
+    @override_settings(SITE_URL="https://juna.example")
+    def test_crawler_files_use_public_urls_and_hide_private_routes(self):
+        robots_response = self.client.get(reverse("website:robots_txt"))
+        sitemap_response = self.client.get(reverse("website:sitemap_xml"))
+
+        self.assertEqual(robots_response.status_code, 200)
+        self.assertEqual(
+            robots_response["Content-Type"],
+            "text/plain",
+        )
+        self.assertContains(
+            robots_response,
+            "Sitemap: https://juna.example/sitemap.xml",
+        )
+        self.assertContains(robots_response, "Disallow: /admin-portal/")
+        self.assertContains(robots_response, "Disallow: /staff/")
+
+        self.assertEqual(sitemap_response.status_code, 200)
+        self.assertEqual(
+            sitemap_response["Content-Type"],
+            "application/xml",
+        )
+        self.assertContains(
+            sitemap_response,
+            "<loc>https://juna.example/</loc>",
+        )

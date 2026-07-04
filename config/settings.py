@@ -44,6 +44,30 @@ INSTALLED_APPS = [
     "website",
 ]
 
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "UserAttributeSimilarityValidator"
+        ),
+    },
+    {
+        "NAME": (
+            "django.contrib.auth.password_validation.MinimumLengthValidator"
+        ),
+    },
+    {
+        "NAME": (
+            "django.contrib.auth.password_validation.CommonPasswordValidator"
+        ),
+    },
+    {
+        "NAME": (
+            "django.contrib.auth.password_validation.NumericPasswordValidator"
+        ),
+    },
+]
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -107,3 +131,23 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Vercel terminates HTTPS before forwarding requests to Django.
+if os.getenv("VERCEL"):
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = int(
+        os.getenv("DJANGO_SECURE_HSTS_SECONDS", "3600")
+    )
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = (
+        os.getenv("DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS", "False").lower()
+        in ("true", "1", "t")
+    )
+    SECURE_HSTS_PRELOAD = (
+        os.getenv("DJANGO_SECURE_HSTS_PRELOAD", "False").lower()
+        in ("true", "1", "t")
+    )
