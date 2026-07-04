@@ -1,0 +1,66 @@
+{% for message in messages %}
+    <div
+        class="pointer-events-auto flex translate-y-2 items-start gap-3 rounded-2xl border border-l-4 bg-white p-4 opacity-0 shadow-xl transition duration-300
+               {% if message.tags == 'success' %}border-green/30 border-l-green text-green{% elif message.tags == 'error' %}border-pink/30 border-l-pink text-pink{% elif message.tags == 'warning' %}border-gold/30 border-l-gold text-gold{% else %}border-blue/30 border-l-blue text-blue{% endif %}"
+        data-toast
+        role="{% if message.tags == 'error' %}alert{% else %}status{% endif %}"
+    >
+        <span
+            class="flex size-9 shrink-0 items-center justify-center rounded-full bg-current/10"
+            aria-hidden="true"
+        >
+            {% if message.tags == "success" %}
+                <svg
+                    viewBox="0 0 24 24"
+                    class="size-5"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <path d="m5 12 4 4L19 6"></path>
+                </svg>
+            {% else %}
+                <svg
+                    viewBox="0 0 24 24"
+                    class="size-5"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                >
+                    <path d="M12 8v5"></path>
+                    <path d="M12 17h.01"></path>
+                    <circle cx="12" cy="12" r="9"></circle>
+                </svg>
+            {% endif %}
+        </span>
+        <div class="min-w-0 flex-1">
+            <p class="font-regular text-sm font-semibold text-neutral-950">
+                {% if message.tags == "success" %}Success{% elif message.tags == "error" %}Something went wrong{% elif message.tags == "warning" %}Please note{% else %}Update{% endif %}
+            </p>
+            <p class="font-regular mt-0.5 text-sm leading-normal text-neutral-600">
+                {{ message }}
+            </p>
+        </div>
+        <button
+            type="button"
+            class="shrink-0 rounded-md p-1 text-neutral-400 transition-colors hover:text-neutral-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
+            data-toast-dismiss
+            aria-label="Dismiss notification"
+        >
+            <svg
+                viewBox="0 0 24 24"
+                class="size-4"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                aria-hidden="true"
+            >
+                <path d="M6 6l12 12M18 6 6 18"></path>
+            </svg>
+        </button>
+    </div>
+{% endfor %}

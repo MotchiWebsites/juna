@@ -1,94 +1,19 @@
-{% load static %}
-
 <section
     id="works"
-    class="scroll-mt-20 px-6 py-20 sm:px-10 lg:scroll-mt-0 lg:px-16"
+    class="max-w-5xl scroll-mt-20 px-6 sm:px-10 lg:pl-site-edge lg:pr-12"
     tabindex="-1"
+    aria-labelledby="works-title"
 >
     <div class="mx-auto w-full max-w-375">
-        <h2
-            class="font-display max-w-4xl text-5xl leading-none sm:text-7xl"
-            data-reveal
-        >
-            Selected work
-        </h2>
+        {% include "website/partials/components/shared/heading.html" with heading=headings.works only %}
 
-        {# A compact stack on mobile becomes an editorial mosaic on desktop. #}
+        {# A mobile stack becomes a two-column bento on tablet and an editorial mosaic on desktop. #}
         <div
-            class="mt-12 grid gap-5 sm:grid-cols-2 lg:mt-16 lg:h-[min(72vw,61.25rem)] lg:grid-cols-12 lg:grid-rows-3"
+            class="mt-12 grid gap-5 sm:grid-cols-2 lg:mt-16 lg:h-screen lg:grid-cols-12 lg:grid-rows-3"
         >
-            {# Mobile product experience #}
-            <figure
-                class="group aspect-4/3 overflow-hidden rounded-3xl bg-neutral-100 lg:col-span-5 lg:aspect-auto"
-            >
-                <img
-                    src="{% static 'images/email-phone.jpg' %}"
-                    alt="Mobile health platform displayed on a phone against a red background"
-                    width="5184"
-                    height="3456"
-                    loading="lazy"
-                    decoding="async"
-                    class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                />
-            </figure>
-
-            {# Outdoor campaign signage #}
-            <figure
-                class="group aspect-16/10 overflow-hidden rounded-3xl bg-neutral-100 lg:col-span-7 lg:aspect-auto"
-            >
-                <img
-                    src="{% static 'images/signage.jpg' %}"
-                    alt="eBay Advertising welcome sign surrounded by greenery"
-                    width="4800"
-                    height="3179"
-                    loading="lazy"
-                    decoding="async"
-                    class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                />
-            </figure>
-
-            {# Lai packaging and identity #}
-            <figure
-                class="group aspect-4/5 overflow-hidden rounded-3xl bg-neutral-100 lg:col-span-7 lg:row-span-2 lg:aspect-auto"
-            >
-                <img
-                    src="{% static 'images/lai_project_can.jpg' %}"
-                    alt="Hand holding a white beverage can with navy lettering"
-                    width="4000"
-                    height="6000"
-                    loading="lazy"
-                    decoding="async"
-                    class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                />
-            </figure>
-
-            <figure
-                class="group aspect-square overflow-hidden rounded-3xl bg-neutral-100 lg:col-span-5 lg:aspect-auto"
-            >
-                <img
-                    src="{% static 'images/logo_lai_project.gif' %}"
-                    alt="Animated Lai brand wordmark"
-                    width="1920"
-                    height="1920"
-                    loading="lazy"
-                    decoding="async"
-                    class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                />
-            </figure>
-
-            <figure
-                class="group aspect-5/4 overflow-hidden rounded-3xl bg-neutral-100 lg:col-span-5 lg:aspect-auto"
-            >
-                <img
-                    src="{% static 'images/postcard_mockup.jpg' %}"
-                    alt="Healthcare brand postcard mockup on a navy background"
-                    width="1350"
-                    height="1080"
-                    loading="lazy"
-                    decoding="async"
-                    class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                />
-            </figure>
+            {% for work, layout in work_grid %}
+                {% include "website/partials/components/works/work_figure.html" with work=work layout=layout only %}
+            {% endfor %}
         </div>
     </div>
 </section>

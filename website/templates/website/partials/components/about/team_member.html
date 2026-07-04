@@ -1,0 +1,51 @@
+{% load static %}
+
+<article
+    class="grid justify-items-center gap-7 md:grid-cols-2 md:gap-10 {% if member.is_reversed %}w-full lg:max-w-5xl{% endif %}"
+    data-reveal
+    data-team-member
+>
+    <div
+        class="aspect-square w-full max-w-64 overflow-hidden rounded-full border-4 bg-neutral-100 md:max-w-68 {% if member.is_reversed %}border-pink md:col-start-2 md:row-start-1{% else %}border-gold{% endif %}"
+    >
+        <img
+            src="{% static member.image_path %}"
+            alt="{{ member.image_alt }}"
+            width="{{ member.image_width }}"
+            height="{{ member.image_height }}"
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover {% if not member.is_reversed %}scale-125 object-center{% endif %}"
+        />
+    </div>
+
+    <div
+        class="max-w-2xl self-center text-center md:text-left {% if member.is_reversed %}md:col-start-1 md:row-start-1 md:text-right{% endif %}"
+    >
+        <header
+            class="flex items-center justify-center gap-3 md:justify-start {% if member.is_reversed %}md:flex-row-reverse{% endif %}"
+        >
+            <img
+                src="{% static member.decoration_path %}"
+                alt=""
+                width="{{ member.decoration_width }}"
+                height="{{ member.decoration_height }}"
+                class="size-14 shrink-0 object-contain sm:size-16 lg:size-18"
+                aria-hidden="true"
+            />
+            <div>
+                <h3
+                    class="text-4xl font-semibold leading-none sm:text-5xl lg:text-5xl {% if member.is_reversed %}text-pink{% else %}text-gold{% endif %}"
+                >
+                    {{ member.name }}
+                </h3>
+                <p class="mt-1 text-2xl font-semibold leading-none lg:text-3xl">
+                    {{ member.role }}
+                </p>
+            </div>
+        </header>
+        <p class="font-regular mt-5 text-pretty text-sm leading-snug text-gray-500 sm:text-base xl:text-lg">
+            {{ member.description }}
+        </p>
+    </div>
+</article>

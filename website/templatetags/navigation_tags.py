@@ -2,7 +2,7 @@ from secrets import choice
 
 from django import template
 
-from website.navigation import PRIMARY_NAVIGATION
+from website.content.navigation import PRIMARY_NAVIGATION
 
 register = template.Library()
 
@@ -14,7 +14,7 @@ FAVICON_PATHS = tuple(
 
 
 @register.inclusion_tag(
-    "website/partials/navigation_links.html",
+    "website/partials/components/navigation/navigation_links.html",
 )
 def primary_navigation():
     return {

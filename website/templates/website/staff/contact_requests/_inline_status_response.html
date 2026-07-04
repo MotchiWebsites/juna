@@ -1,0 +1,4 @@
+{% include "website/staff/contact_requests/_inline_status.html" with submission=submission status_choices=status_choices can_change=can_change control_id=control_id csrf_token=csrf_token only %}
+<div hx-swap-oob="beforeend:#toast-region">
+    {% include "website/partials/components/feedback/toasts.html" with messages=messages only %}
+</div>

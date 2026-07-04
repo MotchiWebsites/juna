@@ -6,7 +6,37 @@
     const navigationLinks = [
         ...document.querySelectorAll("[data-primary-nav-link]"),
     ];
+    const stickyHeader = document.querySelector("[data-sticky-header]");
+    const desktopNavRail = document.querySelector(
+        "[data-desktop-nav-rail]",
+    );
     const desktopQuery = window.matchMedia("(min-width: 1024px)");
+    let stickyHeaderUpdatePending = false;
+
+    const updateStickyHeader = () => {
+        const isScrolled = window.scrollY > 4;
+
+        stickyHeader?.classList.toggle("is-scrolled", isScrolled);
+        desktopNavRail?.classList.toggle(
+            "is-header-scrolled",
+            isScrolled,
+        );
+        stickyHeaderUpdatePending = false;
+    };
+
+    const requestStickyHeaderUpdate = () => {
+        if (stickyHeaderUpdatePending) {
+            return;
+        }
+
+        stickyHeaderUpdatePending = true;
+        window.requestAnimationFrame(updateStickyHeader);
+    };
+
+    window.addEventListener("scroll", requestStickyHeaderUpdate, {
+        passive: true,
+    });
+    updateStickyHeader();
 
     const setMenuState = (isOpen, returnFocus = false) => {
         if (!menuButton || !mobileMenu) {

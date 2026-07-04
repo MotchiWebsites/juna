@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1"
+        />
+        <meta name="robots" content="noindex,nofollow" />
+        <title>{% block title %}Juna Staff{% endblock title %}</title>
+        <link
+            rel="stylesheet"
+            href="https://use.typekit.net/phi6nyg.css"
+        />
+        <link
+            rel="stylesheet"
+            href="{% static 'css/app.css' %}"
+        />
+        <link
+            rel="icon"
+            href="{% static 'favicon/favicon.ico' %}"
+            sizes="48x48"
+        />
+        <script src="{% static 'vendor/htmx.min.js' %}" defer></script>
+    </head>
+    <body class="min-h-screen bg-neutral-50 font-sans text-neutral-950">
+        <header class="sticky top-0 z-40 border-b border-neutral-200 bg-white/95 backdrop-blur">
+            <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-3 sm:px-8">
+                <div class="flex items-center gap-4">
+                    <a
+                        href="{% url 'website_staff:contact_request_list' %}"
+                        class="focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green"
+                        aria-label="Contact requests"
+                    >
+                        <img
+                            src="{% static 'images/juna_logo.png' %}"
+                            alt="Juna"
+                            width="890"
+                            height="702"
+                            class="h-10 w-auto"
+                        />
+                    </a>
+                    <span class="font-regular text-sm text-neutral-500">
+                        Staff workspace
+                    </span>
+                </div>
+                <nav
+                    class="font-regular flex items-center gap-4 text-sm"
+                    aria-label="Staff navigation"
+                >
+                    <span class="hidden text-neutral-500 sm:inline">
+                        {{ request.user.get_short_name|default:request.user.get_username }}
+                    </span>
+                    <a
+                        href="{% url 'website:home' %}"
+                        class="text-neutral-600 transition-colors hover:text-green focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green"
+                    >
+                        View site
+                    </a>
+                    <a
+                        href="{% url 'admin:index' %}"
+                        class="text-neutral-600 transition-colors hover:text-green focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green"
+                    >
+                        Django admin
+                    </a>
+                    <form
+                        method="post"
+                        action="{% url 'admin:logout' %}"
+                    >
+                        {% csrf_token %}
+                        <button
+                            type="submit"
+                            class="rounded-lg border border-neutral-300 px-3 py-2 transition-colors hover:border-pink hover:text-pink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink"
+                        >
+                            Log out
+                        </button>
+                    </form>
+                </nav>
+            </div>
+        </header>
+
+        <div
+            id="toast-region"
+            class="pointer-events-none fixed top-20 right-4 left-4 z-50 ml-auto max-w-md space-y-3 sm:left-auto sm:w-full"
+            aria-live="polite"
+            aria-atomic="false"
+        >
+            {% include "website/partials/components/feedback/toasts.html" with messages=messages only %}
+        </div>
+
+        <main class="mx-auto w-full max-w-7xl px-5 py-8 sm:px-8 sm:py-10">
+            {% block content %}
+            {% endblock content %}
+        </main>
+
+        <script src="{% static 'js/toasts.js' %}" defer></script>
+    </body>
+</html>

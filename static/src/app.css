@@ -16,26 +16,53 @@ html {
 
     /* Snaga Font */
     --font-sans: "snaga-unicase-display", ui-sans-serif, system-ui, sans-serif;
-    --font-display: "snaga-unicase-display", ui-sans-serif, system-ui, sans-serif;
+    --font-display:
+        "snaga-unicase-display", ui-sans-serif, system-ui, sans-serif;
 
     /* Keeps opposite desktop header elements visually balanced. */
     --spacing-site-edge: 2rem;
 }
 
+@utility font-regular {
+    font-family: Arial, ui-sans-serif, system-ui, sans-serif;
+    font-weight: 400;
+}
+
 @layer components {
+    .site-header {
+        border-bottom: 1px solid transparent;
+        transition:
+            border-color 180ms ease,
+            box-shadow 180ms ease;
+    }
+
+    .site-header.is-scrolled {
+        border-bottom-color: rgb(23 23 23 / 12%);
+        box-shadow: 0 0.5rem 1.25rem rgb(10 10 10 / 7%);
+    }
+
+    .desktop-nav-list {
+        padding-top: 2rem;
+        transition: padding-top 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    [data-desktop-nav-rail].is-header-scrolled .desktop-nav-list {
+        padding-top: 3.75rem;
+    }
+
     .site-nav-link,
     .site-nav-cta {
-        font-size: 1.6rem;
         line-height: 1;
     }
 
     .site-nav-link {
         display: flex;
-        min-height: 2.75rem;
+        min-height: 1.75rem;
         align-items: center;
         justify-content: flex-end;
-        gap: 1rem;
+        gap: 0.5rem;
         color: #525252;
+        font-size: 1.125rem;
         text-align: right;
         text-decoration: none;
         transition:
@@ -45,6 +72,7 @@ html {
     }
 
     .site-nav-cta {
+        font-size: clamp(1.125rem, 1.7vw, 1.5rem);
         font-weight: 400;
         letter-spacing: normal;
     }
@@ -62,7 +90,7 @@ html {
 
     .site-nav-link.is-active {
         color: #0a0a0a;
-        font-size: 1.78rem;
+        font-size: 1.25rem;
         font-weight: 600;
     }
 
@@ -95,6 +123,7 @@ html {
 
     .mobile-menu .site-nav-link {
         min-height: 3.25rem;
+        gap: 1rem;
         font-size: clamp(1.75rem, 7vw, 2.75rem);
     }
 
@@ -102,32 +131,15 @@ html {
         font-size: clamp(1.9rem, 7.5vw, 3rem);
     }
 
-    .hero-emphasis {
-        display: inline-block;
-        max-width: 100%;
-        vertical-align: baseline;
+    .text-emphasis {
+        display: inline;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
         border: 1.5px solid currentColor;
         border-radius: 0.22em;
-        padding: 0.01em 0.17em 0.08em;
+        padding: 0 0.17em 0.04em;
         line-height: inherit;
         white-space: normal;
-        margin: 0.5rem 0.2rem;
-    }
-
-    .hero-emphasis--pink {
-        color: var(--color-pink);
-    }
-
-    .hero-emphasis--blue {
-        color: var(--color-blue);
-    }
-
-    .hero-emphasis--gold {
-        color: var(--color-gold);
-    }
-
-    .hero-emphasis--green {
-        color: var(--color-green);
     }
 
     /*
@@ -149,6 +161,10 @@ html {
         transform: translate3d(0, 0, 0);
         will-change: auto;
     }
+}
+
+a, button:hover {
+    cursor: pointer;
 }
 
 @media (prefers-reduced-motion: reduce) {

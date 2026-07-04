@@ -1,0 +1,125 @@
+{% load navigation_tags static %}
+{% comment %} Mobile navigation {% endcomment %}
+<header
+    class="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-neutral-900 bg-white px-5 lg:hidden"
+>
+    <a
+        href="#overview"
+        class="flex h-full items-center focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green"
+        aria-label="Juna home"
+    >
+        <img
+            src="{% static 'images/juna_logo.png' %}"
+            alt=""
+            width="890"
+            height="702"
+            class="h-full py-2 w-auto max-w-none"
+        >
+    </a>
+    <button
+        type="button"
+        class="group inline-flex size-11 appearance-none items-center justify-center border-0 bg-transparent p-0 text-neutral-900 shadow-none transition-colors duration-200 hover:text-green focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green"
+        data-mobile-menu-toggle
+        aria-expanded="false"
+        aria-controls="mobile-navigation"
+        aria-label="Open primary navigation"
+    >
+        <span
+            class="flex w-7 flex-col gap-1.5"
+            aria-hidden="true"
+        >
+            <span
+                class="h-0.5 w-full shrink-0 origin-center transform-gpu rounded-full bg-current transition-transform duration-380 ease-in-out will-change-transform group-aria-expanded:translate-y-2 group-aria-expanded:rotate-45"
+            ></span>
+            <span
+                class="h-0.5 w-full shrink-0 rounded-full bg-current transition-opacity duration-300 ease-out group-aria-expanded:opacity-0"
+            ></span>
+            <span
+                class="h-0.5 w-full shrink-0 origin-center transform-gpu rounded-full bg-current transition-transform duration-380 ease-in-out will-change-transform group-aria-expanded:-translate-y-2 group-aria-expanded:-rotate-45"
+            ></span>
+        </span>
+    </button>
+</header>
+
+{% comment %} Desktop navigation {% endcomment %}
+<header
+    class="site-header px-site-edge sticky top-0 z-50 hidden h-16 items-center justify-between bg-white lg:flex"
+    data-sticky-header
+>
+    <a
+        href="#overview"
+        class="flex h-full items-center focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green"
+        aria-label="Juna home"
+    >
+        <img
+            src="{% static 'images/juna_logo.png' %}"
+            alt=""
+            width="890"
+            height="702"
+            class="h-full py-2 w-auto max-w-none"
+        >
+    </a>
+    <div class="flex items-center gap-5">
+        {% if request.user.is_staff and perms.website.view_contactsubmission %}
+            <a
+                href="{% url 'website:staff_portal' %}"
+                class="font-regular rounded-full border border-green/30 px-3 py-1.5 text-xs font-semibold text-green transition-colors hover:border-green hover:bg-green hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green"
+            >
+                Staff portal
+            </a>
+        {% endif %}
+        <a
+            href="#contact"
+            class="site-nav-cta group inline-flex items-center justify-end gap-3 whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green"
+        >
+            <span>LET'S CONNECT</span>
+            <img
+                src="{% static 'icons/pink_star.svg' %}"
+                alt=""
+                width="24"
+                height="24"
+                class="h-5 w-5 shrink-0 transition-transform duration-300 group-hover:translate-x-1"
+            />
+        </a>
+    </div>
+</header>
+<div
+    id="mobile-navigation"
+    class="mobile-menu pointer-events-none fixed inset-0 z-40 invisible -translate-y-4 overflow-y-auto bg-white opacity-0 transition-all duration-300 ease-out aria-[hidden=false]:pointer-events-auto aria-[hidden=false]:visible aria-[hidden=false]:translate-y-0 aria-[hidden=false]:opacity-100 lg:hidden"
+    aria-hidden="true"
+>
+    <nav
+        class="flex min-h-full items-center px-7 py-24"
+        aria-label="Primary navigation"
+    >
+        <ul class="w-full space-y-6">
+            {% primary_navigation %}
+            {% if request.user.is_staff and perms.website.view_contactsubmission %}
+                <li class="border-t border-neutral-200 pt-6">
+                    <a
+                        href="{% url 'website:staff_portal' %}"
+                        class="font-regular flex min-h-12 items-center justify-center rounded-xl border border-green px-4 text-base font-semibold text-green transition-colors hover:bg-green hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green"
+                    >
+                        Open staff portal
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+<aside
+    class="fixed right-0 bottom-0 top-16 z-40 hidden w-80 bg-white lg:block"
+    data-desktop-nav-rail
+    aria-label="Site navigation"
+>
+    <div class="px-site-edge h-full pb-12">
+        <nav
+            class="desktop-nav-list h-full border-r border-neutral-900 pr-7"
+            aria-label="Primary navigation"
+        >
+            <ul class="space-y-3">
+                {% primary_navigation %}
+            </ul>
+        </nav>
+    </div>
+</aside>
