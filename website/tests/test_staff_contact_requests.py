@@ -49,6 +49,11 @@ class StaffContactRequestTests(TestCase):
             ),
             fetch_redirect_response=False,
         )
+        self.assertEqual(
+            response.headers["X-Robots-Tag"],
+            "noindex, nofollow",
+        )
+        self.assertEqual(response.headers["Cache-Control"], "private, no-store")
 
     def test_staff_without_model_permission_receives_forbidden(self):
         restricted_staff = get_user_model().objects.create_user(
@@ -110,6 +115,19 @@ class StaffContactRequestTests(TestCase):
         self.assertContains(response, 'autocomplete="username"')
         self.assertContains(response, 'autocomplete="current-password"')
         self.assertContains(response, 'name="csrfmiddlewaretoken"')
+        self.assertEqual(
+            response.headers["X-Robots-Tag"],
+            "noindex, nofollow",
+        )
+
+    def test_staff_workspace_supports_head_requests(self):
+        response = self.client.head(
+            reverse("website_staff:contact_request_list")
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, b"")
+        self.assertEqual(response.headers["Cache-Control"], "private, no-store")
 
     def test_short_staff_url_redirects_to_workspace(self):
         response = self.client.get(reverse("website:staff_portal"))

@@ -1,7 +1,8 @@
 from django.contrib import messages
+from django.views.decorators.cache import cache_control
 from django.shortcuts import redirect, render
 from django.urls import reverse
-from django.views.decorators.http import require_GET, require_POST
+from django.views.decorators.http import require_POST, require_safe
 
 from .content.headings import HOMEPAGE_HEADINGS
 from .content.services import SERVICES
@@ -58,7 +59,7 @@ def submit_contact(request):
     return redirect(f"{reverse('website:home')}#contact")
 
 
-@require_GET
+@require_safe
 def home(request):
     return render(
         request,
@@ -67,7 +68,8 @@ def home(request):
     )
 
 
-@require_GET
+@require_safe
+@cache_control(public=True, max_age=3600)
 def robots_txt(request):
     return render(
         request,
@@ -77,7 +79,8 @@ def robots_txt(request):
     )
 
 
-@require_GET
+@require_safe
+@cache_control(public=True, max_age=3600)
 def sitemap_xml(request):
     return render(
         request,

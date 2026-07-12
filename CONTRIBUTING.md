@@ -77,8 +77,11 @@ Run checks proportional to the change. The normal pre-review set is:
 
 ```bash
 python manage.py check
+python manage.py check --deploy
 python manage.py test
 npm run build
+python manage.py collectstatic --noinput
+python manage.py makemigrations --check --dry-run
 ```
 
 The test command automatically uses isolated in-memory SQLite settings, even
@@ -86,6 +89,8 @@ when local development is connected to Neon.
 
 Add regression tests when fixing a bug. For a new page, test its named URL,
 status, template output, and important metadata or accessibility contract.
+The GitHub quality workflow runs this full set for pull requests and pushes to
+`main`; do not merge by bypassing a failed quality check.
 
 ## Documentation policy
 
@@ -112,6 +117,9 @@ needed. This explicit check helps the documentation stay trustworthy.
 - [ ] Model changes include reviewed migrations.
 - [ ] Behavior changes include appropriate tests.
 - [ ] Relevant Django checks, tests, and frontend builds pass.
+- [ ] New public routes have canonical/indexing behavior and support safe
+      `HEAD` requests where appropriate.
+- [ ] Security-policy changes were verified without weakening CSP globally.
 - [ ] Accessibility and responsive behavior were considered.
 - [ ] `README.md` and `docs/` reflect the change, or no update is required.
 
