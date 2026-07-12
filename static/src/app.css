@@ -132,14 +132,25 @@ html {
     }
 
     .text-emphasis {
-        display: inline;
+        display: inline-block;
+        max-width: 100%;
         -webkit-box-decoration-break: clone;
         box-decoration-break: clone;
+        overflow-wrap: anywhere;
+        word-break: normal;
+        vertical-align: baseline;
         border: 1.5px solid currentColor;
         border-radius: 0.22em;
         padding: 0 0.17em 0.04em;
         line-height: inherit;
         white-space: normal;
+    }
+
+    @media (width < 40rem) {
+        [data-shared-heading] {
+            max-width: min(calc(100vw - 3rem), 20rem) !important;
+            overflow-wrap: anywhere;
+        }
     }
 
     /*

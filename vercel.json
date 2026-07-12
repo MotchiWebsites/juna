@@ -1,3 +1,4 @@
 {
-    "buildCommand": "npm ci --include=dev && python manage.py check && python manage.py test && npm run build && python manage.py collectstatic --noinput"
+    "installCommand": "npm run vercel-install",
+    "buildCommand": "npm run vercel-build"
 }

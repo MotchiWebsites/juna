@@ -6,20 +6,20 @@
     hx-target="this"
     hx-swap="outerHTML"
 >
-    <dl class="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div class="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
+    <dl class="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
+        <div class="rounded-lg border border-neutral-200 bg-white p-3 shadow-sm sm:p-4">
             <dt class="font-regular text-xs tracking-wider text-neutral-500 uppercase">Total</dt>
             <dd class="mt-2 text-3xl font-semibold">{{ summary.total }}</dd>
         </div>
-        <div class="rounded-2xl border border-blue/20 bg-blue/5 p-4">
+        <div class="rounded-lg border border-blue/20 bg-blue/5 p-3 sm:p-4">
             <dt class="font-regular text-xs tracking-wider text-blue uppercase">New</dt>
             <dd class="mt-2 text-3xl font-semibold text-blue">{{ summary.new }}</dd>
         </div>
-        <div class="rounded-2xl border border-gold/20 bg-gold/5 p-4">
+        <div class="rounded-lg border border-gold/20 bg-gold/5 p-3 sm:p-4">
             <dt class="font-regular text-xs tracking-wider text-gold uppercase">In progress</dt>
             <dd class="mt-2 text-3xl font-semibold text-gold">{{ summary.in_progress }}</dd>
         </div>
-        <div class="rounded-2xl border border-green/20 bg-green/5 p-4">
+        <div class="rounded-lg border border-green/20 bg-green/5 p-3 sm:p-4">
             <dt class="font-regular text-xs tracking-wider text-green uppercase">Resolved</dt>
             <dd class="mt-2 text-3xl font-semibold text-green">{{ summary.resolved }}</dd>
         </div>
@@ -28,7 +28,7 @@
     <form
         method="get"
         action="{% url 'website_staff:contact_request_list' %}"
-        class="grid gap-3 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm sm:grid-cols-3"
+        class="grid gap-3 rounded-lg border border-neutral-200 bg-white p-3 shadow-sm sm:grid-cols-3 sm:p-4"
         hx-get="{% url 'website_staff:contact_request_list' %}"
         hx-target="#request-list"
         hx-swap="outerHTML"
@@ -80,7 +80,7 @@
         </div>
     </form>
 
-    <div class="hidden overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm md:block">
+    <div class="hidden overflow-hidden rounded-lg border border-neutral-200 bg-white shadow-sm md:block">
         <div class="overflow-x-auto">
             <table class="font-regular w-full border-collapse text-left text-sm">
                 <thead class="bg-neutral-100 text-xs tracking-wider text-neutral-500 uppercase">
@@ -111,7 +111,7 @@
         {% for submission in page_obj %}
             {% include "website/staff/contact_requests/_submission_card.html" with submission=submission status_choices=status_choices can_change=perms.website.change_contactsubmission csrf_token=csrf_token only %}
         {% empty %}
-            <div class="rounded-2xl border border-neutral-200 bg-white p-8 text-center">
+            <div class="rounded-lg border border-neutral-200 bg-white p-8 text-center">
                 <p class="font-regular text-sm text-neutral-500">
                     No requests match these filters.
                 </p>

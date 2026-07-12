@@ -1,6 +1,6 @@
 {% load i18n static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-CA" class="min-h-full bg-neutral-50">
     <head>
         <meta charset="utf-8" />
         <meta
@@ -8,7 +8,7 @@
             content="width=device-width, initial-scale=1"
         />
         <meta name="robots" content="noindex,nofollow" />
-        <title>{% if form.errors %}Error | {% endif %}Juna staff login</title>
+        <title>{% if form.errors %}Sign-In Error | {% endif %}Juna Staff Login</title>
         <link
             rel="stylesheet"
             href="https://use.typekit.net/phi6nyg.css"
@@ -25,13 +25,43 @@
         {{ form.media }}
     </head>
     <body class="min-h-screen bg-neutral-50 font-sans text-neutral-950">
+        <div
+            id="toast-region"
+            class="pointer-events-none fixed top-4 right-4 left-4 z-50 ml-auto max-w-md space-y-3 sm:left-auto sm:w-full"
+            aria-live="polite"
+            aria-atomic="false"
+        >
+            {% include "website/partials/components/feedback/toasts.html" with messages=messages only %}
+            {% if form.errors %}
+                <div
+                    class="pointer-events-auto flex translate-y-2 items-start gap-3 rounded-lg border border-l-4 border-pink/30 border-l-pink bg-white p-4 text-pink opacity-0 shadow-xl transition duration-300"
+                    data-toast
+                    role="alert"
+                >
+                    <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-current/10" aria-hidden="true">!</span>
+                    <div class="min-w-0 flex-1">
+                        <p class="font-regular text-sm font-semibold text-neutral-950">Unable to Sign In</p>
+                        <p class="font-regular mt-0.5 text-sm leading-normal text-neutral-600">
+                            Check your username and password, then try again.
+                        </p>
+                    </div>
+                    <button
+                        type="button"
+                        class="shrink-0 rounded-md p-1 text-neutral-400 transition-colors hover:text-neutral-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
+                        data-toast-dismiss
+                        aria-label="Dismiss notification"
+                    >
+                        ×
+                    </button>
+                </div>
+            {% endif %}
+        </div>
         <main class="grid min-h-screen lg:grid-cols-2">
             <section class="relative hidden overflow-hidden bg-green p-12 text-white lg:flex lg:flex-col lg:justify-between">
                 <div>
                     <a
                         href="{% url 'website:home' %}"
-                        class="inline-flex rounded-lg bg-white p-2 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
-                        aria-label="Return to Juna"
+                        class="inline-flex items-center gap-3 rounded-lg bg-white p-2 pr-4 text-green focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
                     >
                         <img
                             src="{% static 'images/juna_logo.png' %}"
@@ -40,6 +70,7 @@
                             height="702"
                             class="h-14 w-auto"
                         />
+                        <span class="font-regular text-sm font-semibold">Main website</span>
                     </a>
                     <p class="font-regular mt-10 max-w-md text-sm leading-relaxed text-white/75">
                         A private workspace for reviewing project inquiries and keeping client conversations moving.
@@ -69,11 +100,10 @@
             </section>
 
             <section class="flex items-center justify-center px-5 py-10 sm:px-10">
-                <div class="w-full max-w-md">
+                <div class="w-full max-w-[17.5rem] sm:max-w-md">
                     <a
                         href="{% url 'website:home' %}"
-                        class="mb-10 inline-flex rounded-lg bg-white p-2 shadow-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green lg:hidden"
-                        aria-label="Return to Juna"
+                        class="mb-10 inline-flex items-center gap-3 rounded-lg bg-white p-2 pr-4 text-green shadow-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green lg:hidden"
                     >
                         <img
                             src="{% static 'images/juna_logo.png' %}"
@@ -82,6 +112,7 @@
                             height="702"
                             class="h-12 w-auto"
                         />
+                        <span class="font-regular text-sm font-semibold">Main website</span>
                     </a>
 
                     <p class="font-regular text-sm font-semibold tracking-widest text-green uppercase">
@@ -93,24 +124,6 @@
                     <p class="font-regular mt-4 text-sm leading-normal text-neutral-600">
                         Sign in with your Juna staff account to continue.
                     </p>
-
-                    {% if form.non_field_errors %}
-                        <div
-                            class="font-regular mt-6 rounded-xl border border-pink/30 bg-pink/5 p-4 text-sm text-pink"
-                            role="alert"
-                        >
-                            {% for error in form.non_field_errors %}
-                                <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                    {% elif form.errors %}
-                        <div
-                            class="font-regular mt-6 rounded-xl border border-pink/30 bg-pink/5 p-4 text-sm text-pink"
-                            role="alert"
-                        >
-                            Please correct the highlighted field.
-                        </div>
-                    {% endif %}
 
                     {% if user.is_authenticated %}
                         <div
@@ -125,6 +138,7 @@
                         action="{{ app_path }}"
                         method="post"
                         class="mt-8 space-y-5"
+                        data-admin-login-form
                     >
                         {% csrf_token %}
                         <div>
@@ -165,15 +179,27 @@
                             >
                                 {{ form.password.label }}
                             </label>
-                            <input
-                                type="password"
-                                name="{{ form.password.html_name }}"
-                                id="{{ form.password.id_for_label }}"
-                                autocomplete="current-password"
-                                required
-                                class="font-regular mt-2 h-12 w-full rounded-xl border bg-white px-4 text-base outline-none transition focus:border-green focus:ring-2 focus:ring-green/20 {% if form.password.errors %}border-pink{% else %}border-neutral-300{% endif %}"
-                                {% if form.password.errors %}aria-invalid="true" aria-describedby="{{ form.password.auto_id }}-errors"{% endif %}
-                            />
+                            <div class="relative mt-2">
+                                <input
+                                    type="password"
+                                    name="{{ form.password.html_name }}"
+                                    id="{{ form.password.id_for_label }}"
+                                    autocomplete="current-password"
+                                    required
+                                    class="font-regular h-12 w-full rounded-lg border bg-white pr-16 pl-4 text-base outline-none transition focus:border-green focus:ring-2 focus:ring-green/20 {% if form.password.errors %}border-pink{% else %}border-neutral-300{% endif %}"
+                                    data-password-input
+                                    {% if form.password.errors %}aria-invalid="true" aria-describedby="{{ form.password.auto_id }}-errors"{% endif %}
+                                />
+                                <button
+                                    type="button"
+                                    class="font-regular absolute inset-y-0 right-0 flex min-w-14 items-center justify-center px-3 text-xs font-semibold text-green hover:text-neutral-950 focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-green"
+                                    data-password-toggle
+                                    aria-controls="{{ form.password.id_for_label }}"
+                                    aria-pressed="false"
+                                >
+                                    Show
+                                </button>
+                            </div>
                             {% if form.password.errors %}
                                 <div
                                     id="{{ form.password.auto_id }}-errors"
@@ -204,5 +230,7 @@
                 </div>
             </section>
         </main>
+        <script src="{% static 'js/toasts.js' %}" defer></script>
+        <script src="{% static 'js/admin-auth.js' %}" defer></script>
     </body>
 </html>

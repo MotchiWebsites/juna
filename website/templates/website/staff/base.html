@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-CA" class="min-h-full bg-neutral-50">
     <head>
         <meta charset="utf-8" />
         <meta
@@ -22,12 +22,14 @@
             href="{% static 'favicon/favicon.ico' %}"
             sizes="48x48"
         />
+        <meta name="htmx-config" content='{"includeIndicatorStyles":false}' />
         <script src="{% static 'vendor/htmx.min.js' %}" defer></script>
     </head>
     <body class="min-h-screen bg-neutral-50 font-sans text-neutral-950">
         <header class="sticky top-0 z-40 border-b border-neutral-200 bg-white/95 backdrop-blur">
-            <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-5 py-3 sm:px-8">
-                <div class="flex items-center gap-4">
+            <div class="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 sm:px-8 lg:flex-row lg:items-center lg:justify-between">
+                <div class="flex min-w-0 items-center justify-between gap-3">
+                    <div class="flex min-w-0 items-center gap-3">
                     <a
                         href="{% url 'website_staff:contact_request_list' %}"
                         class="focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-green"
@@ -38,31 +40,35 @@
                             alt="Juna"
                             width="890"
                             height="702"
-                            class="h-10 w-auto"
+                            class="h-9 w-auto sm:h-10"
                         />
                     </a>
-                    <span class="font-regular text-sm text-neutral-500">
+                    <span class="font-regular truncate text-sm text-neutral-500">
                         Staff workspace
+                    </span>
+                    </div>
+                    <span class="font-regular max-w-28 truncate text-xs text-neutral-500 sm:max-w-48 lg:hidden">
+                        {{ request.user.get_short_name|default:request.user.get_username }}
                     </span>
                 </div>
                 <nav
-                    class="font-regular flex items-center gap-4 text-sm"
+                    class="font-regular flex w-full items-center justify-between gap-2 text-sm lg:w-auto lg:justify-end lg:gap-4"
                     aria-label="Staff navigation"
                 >
-                    <span class="hidden text-neutral-500 sm:inline">
+                    <span class="hidden max-w-40 truncate text-neutral-500 lg:inline">
                         {{ request.user.get_short_name|default:request.user.get_username }}
                     </span>
                     <a
                         href="{% url 'website:home' %}"
-                        class="text-neutral-600 transition-colors hover:text-green focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green"
+                        class="whitespace-nowrap text-neutral-600 transition-colors hover:text-green focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green"
                     >
                         View site
                     </a>
                     <a
                         href="{% url 'admin:index' %}"
-                        class="text-neutral-600 transition-colors hover:text-green focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green"
+                        class="whitespace-nowrap text-neutral-600 transition-colors hover:text-green focus-visible:rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green"
                     >
-                        Django admin
+                        Admin console
                     </a>
                     <form
                         method="post"
@@ -71,7 +77,7 @@
                         {% csrf_token %}
                         <button
                             type="submit"
-                            class="rounded-lg border border-neutral-300 px-3 py-2 transition-colors hover:border-pink hover:text-pink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink"
+                            class="whitespace-nowrap rounded-lg border border-neutral-300 px-3 py-2 transition-colors hover:border-pink hover:text-pink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pink"
                         >
                             Log out
                         </button>
@@ -89,11 +95,12 @@
             {% include "website/partials/components/feedback/toasts.html" with messages=messages only %}
         </div>
 
-        <main class="mx-auto w-full max-w-7xl px-5 py-8 sm:px-8 sm:py-10">
+        <main class="mx-auto w-full max-w-7xl px-4 py-6 sm:px-8 sm:py-10">
             {% block content %}
             {% endblock content %}
         </main>
 
         <script src="{% static 'js/toasts.js' %}" defer></script>
+        <script src="{% static 'js/admin-ui.js' %}" defer></script>
     </body>
 </html>

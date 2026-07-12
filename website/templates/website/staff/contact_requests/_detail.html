@@ -1,10 +1,10 @@
 <article>
-    <header class="flex items-start justify-between gap-4 border-b border-neutral-200 pb-5">
+    <header class="flex flex-wrap items-start justify-between gap-4 border-b border-neutral-200 pb-5">
         <div class="min-w-0">
             <p class="font-regular text-xs tracking-widest text-neutral-400 uppercase">
                 Request #{{ submission.pk }}
             </p>
-            <h1 class="mt-2 text-3xl font-semibold leading-none">
+            <h1 class="mt-2 break-words text-2xl font-semibold leading-none sm:text-3xl">
                 {{ submission.name }}
             </h1>
             <p class="font-regular mt-2 text-sm text-neutral-500">
@@ -41,9 +41,7 @@
         >
             Project details
         </h2>
-        <p class="font-regular mt-3 whitespace-pre-wrap text-sm leading-relaxed text-neutral-700">
-            {{ submission.description }}
-        </p>
+        <p class="font-regular mt-3 whitespace-pre-line break-words text-sm leading-relaxed text-neutral-700">{{ submission.description }}</p>
     </section>
 
     <section class="border-t border-neutral-200 pt-5" aria-labelledby="request-status-title">
@@ -73,7 +71,9 @@
                 <select
                     name="{{ status_form.status.html_name }}"
                     id="{{ status_form.status.id_for_label }}"
-                    class="font-regular h-11 w-full rounded-xl border border-neutral-300 bg-white px-3 text-sm text-neutral-900 outline-none transition focus:border-green focus:ring-2 focus:ring-green/20 disabled:cursor-wait disabled:opacity-60"
+                    class="font-regular h-11 w-full rounded-lg border px-3 text-sm font-semibold outline-none transition focus:ring-2 focus:ring-green/20 disabled:cursor-wait disabled:opacity-60
+                           {% if status_form.status.value == 'new' %}border-blue/30 bg-blue/5 text-blue{% elif status_form.status.value == 'in_progress' %}border-gold/30 bg-gold/5 text-gold{% elif status_form.status.value == 'resolved' %}border-green/30 bg-green/5 text-green{% else %}border-neutral-300 bg-neutral-100 text-neutral-700{% endif %}"
+                    data-status-select
                 >
                     {% for value, label in status_form.fields.status.choices %}
                         <option value="{{ value }}" {% if status_form.status.value == value %}selected{% endif %}>
