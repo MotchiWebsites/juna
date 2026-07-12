@@ -1,5 +1,4 @@
-{% load navigation_tags static %}
-{% random_favicon as favicon_path %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en" prefix="og: https://ogp.me/ns#">
     <head>
@@ -10,8 +9,12 @@
         />
         {% comment %} Search basics {% endcomment %}
         <link rel="canonical" href="{{ canonical_url }}" />
+        <meta
+            name="robots"
+            content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+        />
         <title>
-            {% block title %}Juna | Creative Team{% endblock title %}
+            {% block title %}Juna Creative Studio | Branding &amp; Web Design{% endblock title %}
         </title>
         <meta
             name="description"
@@ -20,7 +23,7 @@
         {% comment %} Social sharing: Open Graph {% endcomment %}
         <meta
             property="og:title"
-            content="{% block og_title %}Juna | Creative Team{% endblock og_title %}"
+            content="{% block og_title %}Juna Creative Studio | Branding &amp; Web Design{% endblock og_title %}"
         />
         <meta
             property="og:description"
@@ -33,6 +36,10 @@
         <meta
             property="og:image"
             content="{% block og_image %}{{ site_url }}{% static 'images/social/open-graph/default.png' %}{% endblock og_image %}"
+        />
+        <meta
+            property="og:image:secure_url"
+            content="{% block og_image_secure_url %}{{ site_url }}{% static 'images/social/open-graph/default.png' %}{% endblock og_image_secure_url %}"
         />
         <meta property="og:image:type" content="image/png" />
         <meta property="og:image:width" content="1512" />
@@ -48,7 +55,7 @@
         />
         <meta
             name="twitter:title"
-            content="{% block twitter_title %}Juna | Creative Team{% endblock twitter_title %}"
+            content="{% block twitter_title %}Juna Creative Studio | Branding &amp; Web Design{% endblock twitter_title %}"
         />
         <meta
             name="twitter:description"
@@ -90,7 +97,7 @@
             rel="icon"
             type="image/svg+xml"
             sizes="any"
-            href="{% static favicon_path %}"
+            href="{% static 'favicon/favicon.svg' %}"
         />
         <link
             rel="apple-touch-icon"

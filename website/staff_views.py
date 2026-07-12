@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.views.decorators.http import require_GET, require_POST
+from django.views.decorators.http import require_POST, require_safe
 
 from .forms import ContactSubmissionStatusForm
 from .models import ContactSubmission
@@ -75,13 +75,13 @@ def _detail_context(submission):
     }
 
 
-@require_GET
+@require_safe
 def staff_portal(request):
     _require_permission(request, "website.view_contactsubmission")
     return redirect("website_staff:contact_request_list")
 
 
-@require_GET
+@require_safe
 def contact_request_list(request):
     _require_permission(request, "website.view_contactsubmission")
     context = _list_context(request)
@@ -100,7 +100,7 @@ def contact_request_list(request):
     )
 
 
-@require_GET
+@require_safe
 def contact_request_detail(request, submission_id):
     _require_permission(request, "website.view_contactsubmission")
     submission = get_object_or_404(ContactSubmission, pk=submission_id)

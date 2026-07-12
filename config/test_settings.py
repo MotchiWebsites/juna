@@ -9,6 +9,10 @@ DATABASES = {
     }
 }
 
+# The test client is intentionally in-process and does not traverse Vercel's
+# HTTPS edge. Production redirect behavior is covered by Django's deploy check.
+SECURE_SSL_REDIRECT = False
+
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.MD5PasswordHasher",
 ]

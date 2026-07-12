@@ -149,6 +149,11 @@ class ContactSectionTests(TestCase):
         response = self.client.get(reverse("website:submit_contact"))
 
         self.assertEqual(response.status_code, 405)
+        self.assertEqual(
+            response.headers["X-Robots-Tag"],
+            "noindex, nofollow",
+        )
+        self.assertEqual(response.headers["Cache-Control"], "private, no-store")
 
 
 class ContactSubmissionAdminTests(TestCase):
