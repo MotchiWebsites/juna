@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.test import TestCase
@@ -49,6 +51,11 @@ class StaffContactRequestTests(TestCase):
             ),
             fetch_redirect_response=False,
         )
+        self.assertEqual(
+            response.headers["X-Robots-Tag"],
+            "noindex, nofollow",
+        )
+        self.assertEqual(response.headers["Cache-Control"], "private, no-store")
 
     def test_staff_without_model_permission_receives_forbidden(self):
         restricted_staff = get_user_model().objects.create_user(
@@ -110,6 +117,67 @@ class StaffContactRequestTests(TestCase):
         self.assertContains(response, 'autocomplete="username"')
         self.assertContains(response, 'autocomplete="current-password"')
         self.assertContains(response, 'name="csrfmiddlewaretoken"')
+        self.assertContains(response, "Juna Staff Login")
+        self.assertContains(response, "Main website", count=2)
+        self.assertContains(response, "data-admin-login-form")
+        self.assertContains(response, "data-password-input")
+        self.assertContains(response, "data-password-toggle")
+        self.assertContains(response, 'src="/static/js/admin-auth.js"')
+        self.assertContains(response, 'src="/static/js/toasts.js"')
+        self.assertEqual(
+            response.headers["X-Robots-Tag"],
+            "noindex, nofollow",
+        )
+
+    def test_invalid_admin_login_uses_error_toast(self):
+        self.client.logout()
+
+        response = self.client.post(
+            reverse("admin:login"),
+            {"username": "admin", "password": "incorrect-password"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Unable to Sign In")
+        self.assertContains(response, "data-toast")
+        self.assertContains(response, 'role="alert"')
+
+    def test_admin_login_handles_vercel_rate_limits_in_place(self):
+        script = (
+            Path(__file__).resolve().parents[2] / "static/js/admin-auth.js"
+        ).read_text()
+
+        self.assertIn("response.status === 429", script)
+        self.assertIn("Too Many Attempts", script)
+        self.assertIn("Try again in 10 minutes", script)
+
+    def test_admin_logout_uses_juna_design_and_main_site_link(self):
+        response = self.client.post(reverse("admin:logout"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Signed Out")
+        self.assertContains(response, "You have been signed out securely")
+        self.assertContains(response, "View Main Website")
+        self.assertContains(response, reverse("admin:login"))
+
+    def test_admin_console_has_title_case_and_main_site_access(self):
+        response = self.client.get(reverse("admin:index"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Staff Administration")
+        self.assertContains(response, "Juna Administration")
+        self.assertContains(response, "View Main Website")
+        self.assertContains(response, 'src="/static/images/juna_logo.png"')
+        self.assertContains(response, 'src="/static/js/admin-messages.js"')
+
+    def test_staff_workspace_supports_head_requests(self):
+        response = self.client.head(
+            reverse("website_staff:contact_request_list")
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, b"")
+        self.assertEqual(response.headers["Cache-Control"], "private, no-store")
 
     def test_short_staff_url_redirects_to_workspace(self):
         response = self.client.get(reverse("website:staff_portal"))
@@ -157,6 +225,8 @@ class StaffContactRequestTests(TestCase):
         self.assertContains(response, "md:block")
         self.assertContains(response, 'name="presentation"', count=4)
         self.assertContains(response, 'hx-trigger="change"', count=4)
+        self.assertContains(response, "data-status-select", count=4)
+        self.assertContains(response, 'src="/static/js/admin-ui.js"')
 
     def test_search_and_status_filters_limit_results(self):
         response = self.client.get(
@@ -197,6 +267,11 @@ class StaffContactRequestTests(TestCase):
         self.assertContains(response, "<h1")
         self.assertContains(response, "<html")
         self.assertContains(response, "Back to contact requests")
+        self.assertContains(response, "data-status-select")
+        self.assertNotRegex(
+            response.content.decode(),
+            r'whitespace-pre-line[^>]*>\s+We need a complete visual identity',
+        )
 
     def test_htmx_status_update_refreshes_detail_list_and_toast(self):
         response = self.client.post(

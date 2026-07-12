@@ -1,20 +1,43 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Juna | Creative Team{% endblock title %}
+{% block title %}Juna Creative Studio | Branding &amp; Web Design{% endblock title %}
 {% block description %}Juna is a creative team for conscious brands, creating visual identities and messaging strategies that move audiences.{% endblock description %}
-{% block og_title %}Juna | Creative Team{% endblock og_title %}
-{% block og_description %}Juna is a creative team for conscious brands.{% endblock og_description %}
-{% block twitter_title %}Juna | Creative Team{% endblock twitter_title %}
-{% block twitter_description %}Juna is a creative team for conscious brands.{% endblock twitter_description %}
+{% block og_title %}Juna Creative Studio | Branding &amp; Web Design{% endblock og_title %}
+{% block og_description %}Branding, websites, and creative campaigns for conscious brands.{% endblock og_description %}
+{% block og_image %}{{ site_url }}{% static 'images/social/open-graph/home.png' %}{% endblock og_image %}
+{% block og_image_secure_url %}{{ site_url }}{% static 'images/social/open-graph/home.png' %}{% endblock og_image_secure_url %}
+{% block twitter_title %}Juna Creative Studio | Branding &amp; Web Design{% endblock twitter_title %}
+{% block twitter_description %}Branding, websites, and creative campaigns for conscious brands.{% endblock twitter_description %}
 {% block extra_head %}
-    <script type="application/ld+json">
+    <script type="application/ld+json" nonce="{{ csp_nonce }}">
         {
             "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "Juna",
-            "url": "{{ site_url|escapejs }}/",
-            "logo": "{{ site_url|escapejs }}{% static 'images/juna_logo.png' %}",
-            "description": "A creative team for conscious brands, creating visual identities and messaging strategies that move audiences."
+            "@graph": [
+                {
+                    "@type": "WebSite",
+                    "@id": "{{ site_url|escapejs }}/#website",
+                    "url": "{{ site_url|escapejs }}/",
+                    "name": "Juna",
+                    "alternateName": "Juna Creative Studio",
+                    "publisher": {
+                        "@id": "{{ site_url|escapejs }}/#organization"
+                    }
+                },
+                {
+                    "@type": "Organization",
+                    "@id": "{{ site_url|escapejs }}/#organization",
+                    "name": "Juna",
+                    "alternateName": "Juna Creative Studio",
+                    "url": "{{ site_url|escapejs }}/",
+                    "logo": {
+                        "@type": "ImageObject",
+                        "url": "{{ site_url|escapejs }}{% static 'images/juna_logo.png' %}",
+                        "width": 890,
+                        "height": 702
+                    },
+                    "description": "A creative team for conscious brands, creating visual identities and messaging strategies that move audiences."
+                }
+            ]
         }
     </script>
 {% endblock extra_head %}

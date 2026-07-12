@@ -3,9 +3,9 @@ from django.shortcuts import redirect
 
 from .models import ContactSubmission
 
-admin.site.site_header = "Juna administration"
-admin.site.site_title = "Juna admin"
-admin.site.index_title = "Staff administration"
+admin.site.site_header = "Juna Administration"
+admin.site.site_title = "Juna Admin"
+admin.site.index_title = "Staff Administration"
 
 
 @admin.register(ContactSubmission)

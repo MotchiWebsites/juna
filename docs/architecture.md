@@ -31,7 +31,25 @@ Browser request
 
 `website.context_processors.site_settings` adds the public site origin and
 canonical URL to every template. The base template uses those values for
-canonical, Open Graph, and social metadata.
+canonical, Open Graph, and social metadata. `SITE_URL` must be a path-free
+HTTPS origin whenever debug mode is disabled.
+
+Search discovery is served from `/robots.txt` and `/sitemap.xml`. The homepage
+publishes linked `WebSite` and `Organization` JSON-LD nodes: `WebSite` declares
+the preferred search-result site name, while `Organization` describes the
+brand behind the site. Both use `SITE_URL` so schema identifiers, canonical
+links, crawler files, and social metadata share one public origin. Staff and
+admin surfaces are explicitly excluded from indexing. The web manifest
+supports browser installation and is separate from search indexing. Document
+favicon links use the stable assets under `static/favicon/` so browsers and
+search results receive a consistent brand mark.
+
+`website.middleware.SecurityHeadersMiddleware` adds restrictive browser
+permissions and applies `X-Robots-Tag: noindex, nofollow` to private routes and
+every Vercel preview response. Private responses are also marked `no-store`.
+Robots rules intentionally allow crawlers to request those URLs so the HTTP
+`noindex` directive can be observed; authentication and authorization, not
+robots rules, protect staff data.
 
 Search discovery is served from `/robots.txt` and `/sitemap.xml`. The homepage
 also publishes Organization structured data, while staff and admin surfaces
@@ -157,8 +175,7 @@ under `images/social/open-graph/` and `images/social/x/`.
 
 Templates should use Tailwind utilities directly. Small shared utilities belong
 in `static/src/app.css`; currently `text-emphasis` provides the outlined
-emphasis shell and `font-regular` provides Arial/system body copy at weight
-400.
+emphasis shell and `font-regular` provides Arial/system body copy at weight 400.
 
 The following directories are generated and ignored:
 
@@ -187,16 +204,27 @@ The behavior is progressive:
 HTMX remains responsible for server interaction and HTML swaps. Its transition
 hooks are appropriate when swapped content needs animation, but ordinary
 scroll-triggered reveals stay independent of the request lifecycle.
+Vercel Firewall can reject a contact submission before Django runs. The toast
+enhancement listens for an HTMX `429` response and presents a local rate-limit
+message without replacing the form; successful submissions and application
+validation continue to use server-rendered toast markup.
+
+The admin login remains a standard Django form when JavaScript is unavailable.
+Its progressive enhancement submits with same-origin `fetch`, follows a
+successful authentication redirect, and turns Vercel Firewall `429` responses
+into a branded toast without exposing authentication details. Django admin
+messages use the same transient, dismissible interaction pattern through the
+admin-specific stylesheet and script.
 
 ## Data and migrations
 
 The application uses Neon PostgreSQL whenever `DATABASE_URL` is present and
-falls back to SQLite at `db.sqlite3` when it is absent. The local `.neon` file
-stores the non-secret Neon organization and project context; connection
-credentials remain in the ignored `.env` file. `ContactSubmission` persists
-public inquiries in `contact_submissions`. Its identity and message fields are
-immutable in Django admin; authorized staff update only workflow status in the
-custom workspace.
+falls back to SQLite at `db.sqlite3` when it is absent. Running `neon link`
+creates an ignored `.neon` file containing local organization and project
+context; connection credentials remain in the ignored `.env` file.
+`ContactSubmission` persists public inquiries in `contact_submissions`. Its
+identity and message fields are immutable in Django admin; authorized staff
+update only workflow status in the custom workspace.
 
 For every model change:
 
@@ -211,16 +239,23 @@ persistent application data.
 
 ## Configuration and security
 
-`config/settings.py` reads local variables from `.env` through
-`python-dotenv`. Hosting environments should inject variables directly.
+`config/local_settings.py` reads local variables from `.env` through
+`python-dotenv`. Shared defaults live in `config/base_settings.py`, production
+deployments use `config/production_settings.py`, and automated tests use
+`config/test_settings.py`. Hosting environments should inject variables
+directly.
 
 Security-sensitive defaults are deliberate:
 
-- `DJANGO_SECRET_KEY` has no source-code fallback.
-- Debug mode defaults to off.
+- `DJANGO_SECRET_KEY` has no source-code fallback in production.
+- Debug mode is enabled only in local development settings.
 - Allowed hosts and trusted CSRF origins are environment-controlled.
 - Production redirects to HTTPS and uses secure session and CSRF cookies.
-- Production starts with a cautious one-hour HSTS duration.
+- Production sends a preload-ready HSTS policy for the Vercel HTTPS host.
+- Django 6's CSP middleware enforces same-origin resources, per-request nonces
+  for inline structured data, and explicit Adobe Fonts origins.
+- Browser permissions are disabled unless the application needs them.
+- Vercel previews and private application routes are excluded from indexing.
 - Staff views use Django admin authentication plus model-level permissions.
 - `.env`, local databases, collected static files, and generated frontend
   outputs are ignored by Git.
@@ -235,13 +270,15 @@ The Django tests under `website/tests/` cover:
 
 - the single public route and removed legacy paths;
 - successful homepage rendering and combined metadata;
-- required metadata;
+- required metadata and parsed structured-data relationships;
+- CSP nonces, security headers, preview indexing rules, and safe `HEAD`
+  requests;
 - navigation targets and active state;
 - heading hierarchy and shared heading rendering;
 - team, work, and service collection rendering;
 - intrinsic image dimensions and viewport reveal hooks;
 - favicon behavior;
-- absolute canonical and social image URLs.
+- absolute canonical and social image URLs;
 - contact validation and persistence;
 - custom staff authentication and permission boundaries;
 - responsive request summaries, filtering, and dedicated details;
@@ -256,13 +293,24 @@ cannot mutate Neon.
 
 Vercel runs the build command in `vercel.json`:
 
-1. Install locked Node.js dependencies.
-2. Copy the HTMX browser asset and compile minified Tailwind CSS.
-3. Run Django `collectstatic`.
+1. Install the pinned Python dependencies from `requirements.txt`.
+2. Install locked Node.js dependencies.
+3. Run Django system checks and the isolated test suite.
+4. Copy the HTMX browser asset and compile minified Tailwind CSS.
+5. Run Django `collectstatic`.
 
-Django's WSGI entry point is `config.wsgi.application`. Production must supply
-the variables documented in the README. Preview deployments receive Vercel
-host and CSRF-origin support from `config/settings.py`.
+Production settings are loaded by `config.wsgi.application`. Production must
+supply the variables documented in the README. Preview deployments receive
+Vercel host and CSRF-origin support from `config/production_settings.py` and
+cannot be indexed.
+`.python-version` pins Python 3.14 across Vercel and CI. `.nvmrc` pins Node.js
+24 for local version managers and GitHub Actions, while `package.json` enforces
+the same major during Vercel builds. GitHub's quality workflow independently
+checks security settings, tests, migrations, and both asset builds before code
+reaches production.
+When Vercel system environment variables are exposed, Django adds only the
+exact deployment, branch, and production hostnames to its host and CSRF trust
+lists. A `.vercel.app` wildcard remains as a compatibility fallback.
 
 Any change to the deployment target, database, static file serving, or runtime
 entry point must update this document and the README in the same change.

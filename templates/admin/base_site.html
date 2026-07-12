@@ -1,0 +1,49 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block title %}{% if subtitle %}{{ subtitle|title }} | {% endif %}{{ title|title }} | {{ site_title }}{% endblock title %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'admin/juna-admin.css' %}">
+{% endblock extrastyle %}
+
+{% block branding %}
+    <a class="juna-admin-brand" href="{% url 'admin:index' %}">
+        <img src="{% static 'images/juna_logo.png' %}" alt="" width="710" height="363">
+        <span>{{ site_header }}</span>
+    </a>
+{% endblock branding %}
+
+{% block nav-global %}
+    <a class="juna-site-link" href="{% url 'website:home' %}">View Main Website</a>
+{% endblock nav-global %}
+
+{% block userlinks %}
+    {% if user.has_usable_password %}
+        <a href="{% url 'admin:password_change' %}">{% translate "Change Password" %}</a> /
+    {% endif %}
+    <form id="logout-form" method="post" action="{% url 'admin:logout' %}">
+        {% csrf_token %}
+        <button type="submit">{% translate "Log Out" %}</button>
+    </form>
+    {% include "admin/color_theme_toggle.html" %}
+{% endblock userlinks %}
+
+{% block messages %}
+    {% if messages %}
+        <div class="juna-admin-toasts" aria-live="polite" aria-atomic="false">
+            {% for message in messages %}
+                <div class="juna-admin-toast {{ message.tags }}" data-admin-toast role="{% if message.tags == 'error' %}alert{% else %}status{% endif %}">
+                    <p class="juna-admin-toast__message">{{ message|capfirst }}</p>
+                    <button class="juna-admin-toast__dismiss" type="button" data-admin-toast-dismiss aria-label="Dismiss notification">×</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock messages %}
+
+{% block extrabody %}
+    {{ block.super }}
+    <script src="{% static 'js/admin-messages.js' %}" defer></script>
+{% endblock extrabody %}

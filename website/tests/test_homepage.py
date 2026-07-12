@@ -1,10 +1,10 @@
+import json
 import re
 
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from website.content.navigation import PRIMARY_NAVIGATION
-from website.templatetags.navigation_tags import FAVICON_PATHS
 
 
 class HomepageTests(TestCase):
@@ -16,18 +16,62 @@ class HomepageTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(
             response,
-            "<title>Juna | Creative Team</title>",
+            "<title>Juna Creative Studio | Branding &amp; Web Design</title>",
             html=True,
         )
+        self.assertContains(response, "max-image-preview:large")
         self.assertContains(response, 'name="description"')
         self.assertNotContains(response, 'name="keywords"')
         self.assertContains(response, 'property="og:title"')
         self.assertContains(response, 'property="og:description"')
         self.assertContains(response, 'type="application/ld+json"')
-        self.assertContains(response, '"@type": "Organization"')
+        structured_data = self._structured_data(response)
+        graph_by_type = {
+            item["@type"]: item for item in structured_data["@graph"]
+        }
+        website = graph_by_type["WebSite"]
+        organization = graph_by_type["Organization"]
+
+        self.assertEqual(website["name"], "Juna")
+        self.assertEqual(website["alternateName"], "Juna Creative Studio")
+        self.assertEqual(website["publisher"]["@id"], organization["@id"])
+        self.assertEqual(organization["name"], "Juna")
         self.assertContains(
             response,
             '<main id="site-content" tabindex="-1">',
+        )
+
+    def test_homepage_supports_head_requests(self):
+        response = self.client.head(reverse("website:home"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content, b"")
+        self.assertIn("Content-Security-Policy", response.headers)
+
+    def test_security_policy_allows_only_expected_resource_origins(self):
+        response = self.client.get(reverse("website:home"))
+        html = response.content.decode()
+        policy = response.headers["Content-Security-Policy"]
+        nonce_match = re.search(
+            r'<script type="application/ld\+json" nonce="([^"]+)">',
+            html,
+        )
+
+        self.assertIsNotNone(nonce_match)
+        self.assertIn(f"'nonce-{nonce_match.group(1)}'", policy)
+        self.assertIn("default-src 'self'", policy)
+        self.assertIn("frame-ancestors 'none'", policy)
+        self.assertIn("object-src 'none'", policy)
+        self.assertNotIn("'unsafe-inline'", policy)
+        self.assertIn("Permissions-Policy", response.headers)
+
+    @override_settings(IS_VERCEL_PREVIEW=True)
+    def test_vercel_previews_are_excluded_from_search(self):
+        response = self.client.get(reverse("website:home"))
+
+        self.assertEqual(
+            response.headers["X-Robots-Tag"],
+            "noindex, nofollow",
         )
 
     def test_removed_standalone_page_routes_return_not_found(self):
@@ -169,7 +213,7 @@ class HomepageTests(TestCase):
                 self.assertRegex(image_tag, r'\bwidth="\d+"')
                 self.assertRegex(image_tag, r'\bheight="\d+"')
 
-    def test_page_uses_random_favicon_and_stable_touch_icon(self):
+    def test_page_uses_stable_brand_favicons(self):
         response = self.client.get(reverse("website:home"))
         html = response.content.decode()
 
@@ -180,7 +224,10 @@ class HomepageTests(TestCase):
         )
 
         self.assertIsNotNone(favicon_match)
-        self.assertIn(favicon_match.group(1), FAVICON_PATHS)
+        self.assertEqual(
+            favicon_match.group(1),
+            "favicon/favicon.svg",
+        )
         self.assertContains(response, 'rel="apple-touch-icon"')
         self.assertContains(
             response,
@@ -214,17 +261,28 @@ class HomepageTests(TestCase):
         )
         self.assertContains(
             response,
-            'content="https://juna.example/static/images/social/open-graph/default.png"',
+            'content="https://juna.example/static/images/social/open-graph/home.png"',
         )
         self.assertContains(
             response,
             'content="https://juna.example/static/images/social/x/home.png"',
         )
         self.assertContains(response, 'property="og:image:alt"')
+        self.assertContains(response, 'property="og:image:secure_url"')
         self.assertContains(response, 'name="twitter:card"')
 
+        structured_data = self._structured_data(response)
+        graph_by_type = {
+            item["@type"]: item for item in structured_data["@graph"]
+        }
+        self.assertEqual(graph_by_type["WebSite"]["url"], "https://juna.example/")
+        self.assertEqual(
+            graph_by_type["Organization"]["logo"]["url"],
+            "https://juna.example/static/images/juna_logo.png",
+        )
+
     @override_settings(SITE_URL="https://juna.example")
-    def test_crawler_files_use_public_urls_and_hide_private_routes(self):
+    def test_crawler_files_use_public_canonical_urls(self):
         robots_response = self.client.get(reverse("website:robots_txt"))
         sitemap_response = self.client.get(reverse("website:sitemap_xml"))
 
@@ -237,8 +295,11 @@ class HomepageTests(TestCase):
             robots_response,
             "Sitemap: https://juna.example/sitemap.xml",
         )
-        self.assertContains(robots_response, "Disallow: /admin-portal/")
-        self.assertContains(robots_response, "Disallow: /staff/")
+        self.assertNotContains(robots_response, "Disallow:")
+        self.assertEqual(
+            robots_response.headers["Cache-Control"],
+            "public, max-age=3600",
+        )
 
         self.assertEqual(sitemap_response.status_code, 200)
         self.assertEqual(
@@ -249,3 +310,12 @@ class HomepageTests(TestCase):
             sitemap_response,
             "<loc>https://juna.example/</loc>",
         )
+
+    def _structured_data(self, response):
+        match = re.search(
+            r'<script type="application/ld\+json"[^>]*>\s*(.*?)\s*</script>',
+            response.content.decode(),
+            re.DOTALL,
+        )
+        self.assertIsNotNone(match)
+        return json.loads(match.group(1))

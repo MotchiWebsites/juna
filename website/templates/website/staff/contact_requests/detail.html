@@ -1,6 +1,6 @@
 {% extends "website/staff/base.html" %}
 
-{% block title %}{{ submission.name }} | Contact requests{% endblock title %}
+{% block title %}{{ submission.name }} | Contact Requests{% endblock title %}
 
 {% block content %}
     <a
@@ -12,7 +12,7 @@
     </a>
     <div
         id="request-detail-panel"
-        class="mt-6 max-w-3xl rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-7"
+        class="mt-5 max-w-3xl rounded-lg border border-neutral-200 bg-white p-4 shadow-sm sm:mt-6 sm:p-7"
     >
         {% include "website/staff/contact_requests/_detail.html" %}
     </div>
