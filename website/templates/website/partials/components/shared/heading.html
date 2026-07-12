@@ -1,7 +1,7 @@
 {% if heading.level == 1 %}
     <h1
         id="{{ heading.heading_id }}"
-        class="font-display font-semibold
+        class="font-display min-w-0 w-full font-semibold
                {% if heading.variant == "hero" %}
                max-w-4xl text-xl sm:text-2xl leading-loose md:text-3xl lg:text-4xl xl:text-5xl
                {% else %}
@@ -18,7 +18,7 @@
 {% else %}
     <h2
         id="{{ heading.heading_id }}"
-        class="font-display font-semibold
+        class="font-display min-w-0 w-full font-semibold
                {% if heading.variant == "hero" %}
                max-w-4xl text-xl sm:text-2xl leading-loose md:text-3xl lg:text-4xl xl:text-5xl
                {% else %}

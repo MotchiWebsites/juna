@@ -57,7 +57,7 @@
         root.querySelectorAll("[data-toast]").forEach(initializeToast);
     };
 
-    const showErrorToast = (message) => {
+    const showErrorToast = (message, title = "Please wait") => {
         const region = document.querySelector("#toast-region");
         if (!region) {
             return;
@@ -79,7 +79,7 @@
                 </svg>
             </span>
             <div class="min-w-0 flex-1">
-                <p class="font-regular text-sm font-semibold text-neutral-950">Please wait</p>
+                <p class="font-regular text-sm font-semibold text-neutral-950" data-toast-title></p>
                 <p class="font-regular mt-0.5 text-sm leading-normal text-neutral-600" data-toast-message></p>
             </div>
             <button type="button" class="shrink-0 rounded-md p-1 text-neutral-400 transition-colors hover:text-neutral-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current" data-toast-dismiss aria-label="Dismiss notification">
@@ -88,6 +88,7 @@
                 </svg>
             </button>
         `;
+        toast.querySelector("[data-toast-title]").textContent = title;
         toast.querySelector("[data-toast-message]").textContent = message;
         region.append(toast);
         initializeToast(toast);
@@ -113,6 +114,10 @@
                 "Too many messages were sent from this connection. Try again in a few minutes.",
             );
         }
+    });
+
+    document.addEventListener("juna:toast", (event) => {
+        showErrorToast(event.detail.message, event.detail.title);
     });
 
     initializeToasts();
